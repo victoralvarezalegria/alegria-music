@@ -29,20 +29,22 @@ const events: EventGroup[] = [
   {
     month: "April",
     entries: [
-      { date: "7 – 21", type: "ENGAGEMENT", event: "Watches & Wonders Geneva", location: "Geneva · Switzerland" },
+      { date: "17 – 21", type: "ENGAGEMENT", event: "Watches & Wonders Geneva", location: "Geneva · Switzerland" },
       { date: "24 – 26", type: "CONGRESS", event: "iBrass Congress", location: "Bétera, Valencia · Spain" },
-      { date: "25 – 26", type: "CONCERT", event: "Soloist · Banda Sinfónica Centre Artístic Musical de Bétera", location: "Bétera, Valencia · Spain" },
+      { date: "25", type: "CONCERT", event: "Soloist · Banda Sinfónica Centre Artístic Musical de Bétera", location: "Bétera, Valencia · Spain" },
+      { date: "27", type: "CONCERT", event: "Soloist · Banda Sinfónica Centre Artístic Musical de Bétera", location: "Bétera, Valencia · Spain" },
     ],
   },
   {
     month: "May",
     entries: [
+      { date: "1", type: "CONCERT", event: "Vappu Concert · World Premiere · Ricardo Mollá «Dance of Fire»", location: "Helsinki · Finland" },
       { date: "6 – 10", type: "MASTERCLASS", event: "Mastermind – El Poblado", location: "Medellín · Colombia" },
       { date: "11 – 17", type: "MASTERCLASS", event: "Masterclass · Universidad del Valle", location: "Cali · Colombia" },
       { date: "15", type: "CONCERT", event: "Soloist · Banda Sinfónica Universidad del Valle", location: "Cali · Colombia" },
       { date: "18 – 24", type: "MASTERCLASS", event: "Masterclass · Universidad de Antioquia", location: "Medellín · Colombia" },
       { date: "22", type: "CONCERT", event: "Soloist · Orquesta Departamental de Antioquia", location: "Medellín · Colombia" },
-      { date: "26 – 31", type: "MASTERCLASS", event: "Masterclass · Hong Kong Low Brass Center", location: "Hong Kong" },
+      { date: "28 – 29", type: "MASTERCLASS", event: "Masterclass · Hong Kong Low Brass Center", location: "Hong Kong" },
     ],
   },
   {
@@ -50,15 +52,15 @@ const events: EventGroup[] = [
     entries: [
       { date: "1 – 4", type: "RECORDING", event: "Recording · Romeo and Juliet (Schoenberg) · Helsinki Philharmonic", location: "Helsinki · Finland" },
       { date: "5 – 7", type: "MASTERCLASS", event: "Masterclass", location: "Povoletto · Italy" },
-      { date: "8", type: "CONCERT", event: "Professional Engagement", location: "Venice · Italy" },
+      { date: "8", type: "RECORDING", event: "Recording · Venice", location: "Venice · Italy" },
       { date: "26", type: "CONCERT", event: "Trio Litera · Festival Internacional de Santander", location: "Santander · Spain" },
     ],
   },
   {
     month: "July",
     entries: [
-      { date: "2", type: "RECORDING", event: "Recording Sessions", location: "Helsinki · Finland" },
-      { date: "15 – 19", type: "CONTEST", event: "International Brass Band Contest – Palau de les Arts", location: "Valencia · Spain" },
+      { date: "2 – 15", type: "RECORDING", event: "Recording Sessions", location: "Helsinki · Finland" },
+      { date: "15 – 19", type: "CONTEST", event: "Certamen Internacional de Bandas de Música «Ciudad de Valencia»", location: "Valencia · Spain" },
       { date: "19 – 26", type: "FESTIVAL", event: "Żywieckie Suwakowanie Festival", location: "Poland" },
     ],
   },
@@ -72,6 +74,7 @@ const events: EventGroup[] = [
     month: "September",
     entries: [
       { date: "14 – 19", type: "ORCHESTRA", event: "Orchestral Project · Helsinki Philharmonic", location: "Helsinki · Finland" },
+      { date: "23 – 26", type: "CONCERT", event: "Monaco Show", location: "Monaco" },
       { date: "31 Aug – 3 Sep", type: "ORCHESTRA", event: "Tchaikovsky 6 · Helsinki Philharmonic", location: "Helsinki · Finland" },
     ],
   },
