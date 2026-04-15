@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const socials = [
   {
@@ -31,15 +34,17 @@ const socials = [
   },
 ];
 
-const footerLinks = [
-  { href: "/", label: "Home" },
-  { href: "/biography", label: "Biography" },
-  { href: "/events", label: "Events" },
-  { href: "/book", label: "Study With Me" },
-  { href: "/contact", label: "Contact" },
-];
-
 export default function Footer() {
+  const { t } = useLanguage();
+
+  const footerLinks = [
+    { href: "/", label: t("nav.home") },
+    { href: "/biography", label: t("nav.biography") },
+    { href: "/events", label: t("nav.events") },
+    { href: "/book", label: t("nav.studyWithMe") },
+    { href: "/contact", label: t("nav.contact") },
+  ];
+
   return (
     <footer className="bg-card border-t border-border">
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-16">
@@ -64,10 +69,10 @@ export default function Footer() {
               className="text-xs text-muted-foreground leading-relaxed mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              International Trombone Soloist<br />
-              Former Karajan Academy, Berlin Philharmonic<br />
-              Principal Trombone, Helsinki Philharmonic<br />
-              Online Educator
+              {t("footer.desc1")}<br />
+              {t("footer.desc2")}<br />
+              {t("footer.desc3")}<br />
+              {t("footer.desc4")}
             </p>
             <div className="flex items-center gap-3">
               <Image
@@ -93,7 +98,7 @@ export default function Footer() {
               className="text-xs tracking-widest uppercase text-primary mb-5"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Navigation
+              {t("footer.navigation")}
             </p>
             <ul className="space-y-3">
               {footerLinks.map((link) => (
@@ -116,7 +121,7 @@ export default function Footer() {
               className="text-xs tracking-widest uppercase text-primary mb-5"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Contact
+              {t("footer.contact")}
             </p>
             <ul className="space-y-3 mb-8">
               <li>
@@ -129,8 +134,6 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-
-            {/* Socials */}
             <div className="flex gap-4">
               {socials.map((s) => (
                 <a
@@ -148,13 +151,12 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p
             className="text-xs text-muted-foreground"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            © {new Date().getFullYear()} Víctor Álvarez Alegría. All rights reserved.
+            © {new Date().getFullYear()} Víctor Álvarez Alegría. {t("footer.rights")}
           </p>
           <p
             className="text-xs text-muted-foreground"

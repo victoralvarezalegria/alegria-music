@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type EventType =
   | "MASTERCLASS"
@@ -129,6 +132,8 @@ const upcomingProjects: ProjectCard[] = [
 ];
 
 export default function EventsPage() {
+  const { t } = useLanguage();
+
   return (
     <>
       <Header />
@@ -141,20 +146,20 @@ export default function EventsPage() {
               className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              2026 Calendar
+              {t("events.calendarLabel")}
             </p>
             <h1
               className="text-5xl md:text-7xl font-light text-foreground mb-6"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Upcoming <span className="italic">Events</span>
+              {t("events.upcomingEvents").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="italic">{t("events.upcomingEvents").split(" ").slice(-1)}</span>
             </h1>
             <p
               className="text-base text-muted-foreground leading-relaxed max-w-xl mx-auto"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Masterclasses, solo concerts, festivals, and orchestral engagements
-              — following Víctor across four continents in 2026.
+              {t("events.description")}
             </p>
           </div>
         </section>
@@ -166,13 +171,14 @@ export default function EventsPage() {
               className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Upcoming Projects
+              {t("events.upcomingProjects")}
             </p>
             <h2
               className="text-4xl md:text-5xl font-light text-foreground leading-tight"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              On the <span className="italic">Road</span>
+              {t("events.onTheRoad").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="italic">{t("events.onTheRoad").split(" ").slice(-1)}</span>
             </h2>
           </div>
 
@@ -225,7 +231,7 @@ export default function EventsPage() {
                     className="text-[10px] tracking-[0.3em] uppercase text-primary mb-4 pb-3 border-b border-border"
                     style={{ fontFamily: "var(--font-body)" }}
                   >
-                    {group.month} 2026
+                    {t(`events.months.${group.month}`)} 2026
                   </p>
 
                   {/* Entries */}
@@ -276,13 +282,14 @@ export default function EventsPage() {
               className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Archive
+              {t("events.archive")}
             </p>
             <h2
               className="text-4xl md:text-5xl font-light text-foreground mb-12 leading-tight"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Past <span className="italic">Events</span>
+              {t("events.pastEvents").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="italic">{t("events.pastEvents").split(" ").slice(-1)}</span>
             </h2>
 
             <div className="space-y-3">
@@ -323,20 +330,21 @@ export default function EventsPage() {
               className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Interested in booking?
+              {t("events.interestedBooking")}
             </p>
             <h2
               className="text-3xl font-light text-foreground mb-6"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Work with <span className="italic">Víctor</span>
+              {t("events.workWith").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="italic">{t("events.workWith").split(" ").slice(-1)}</span>
             </h2>
             <a
               href="mailto:victoralvarezalegria@gmail.com?subject=Event%20Booking%20Inquiry"
               className="inline-block px-10 py-4 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Get in Touch
+              {t("events.getInTouch")}
             </a>
           </div>
         </section>
