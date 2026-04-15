@@ -64,13 +64,13 @@ export default function ContactPage() {
                     </p>
                     <div className="space-y-1">
                       <a
-                        href="https://instagram.com/alegriamusic"
+                        href="https://www.instagram.com/alegria___music/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
                         style={{ fontFamily: "var(--font-body)" }}
                       >
-                        Instagram: @alegriamusic
+                        Instagram: @alegria___music
                       </a>
                       <a
                         href="https://facebook.com/victoralvarezalegria"
