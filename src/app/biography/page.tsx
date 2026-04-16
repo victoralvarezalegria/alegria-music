@@ -408,7 +408,7 @@ export default function BiographyPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
               {[
                 { src: "/images/victor-alessi.jpg", caption: "Joseph Alessi", sub: "Taipei Music Festival and Academy" },
-                { src: "/images/victor-batallan.jpg", caption: "Esteban Batallan", sub: "Taipei Music Festival and Academy" },
+                { src: "/images/victor-with-batallan.jpg", caption: "Esteban Batallan", sub: "Taipei Music Festival and Academy" },
                 { src: "/images/victor-fabio-luisi.jpg", caption: "Fabio Luisi", sub: "Taipei Music Festival and Academy" },
                 { src: "/images/victor-pekka-kuusisto.jpg", caption: "Pekka Kuusisto", sub: "Helsinki Philharmonic Orchestra" },
               ].map((item) => (
