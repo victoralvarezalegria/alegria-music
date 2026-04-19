@@ -610,7 +610,7 @@ export default function BiographyPage() {
                       src="/images/victor-helsinki-brass.jpg"
                       alt="Helsinki Philharmonic brass section"
                       fill
-                      className="object-cover object-top"
+                      className="object-cover object-[center_40%]"
                       sizes="(max-width: 768px) 50vw, 25vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
