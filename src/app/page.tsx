@@ -2,6 +2,7 @@
 
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import VideoSection from "@/components/VideoSection";
 import Bio from "@/components/Bio";
 import Featured from "@/components/Featured";
 import Videos from "@/components/Videos";
@@ -17,6 +18,7 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <VideoSection />
         <Bio />
         <Featured />
         <Videos />
