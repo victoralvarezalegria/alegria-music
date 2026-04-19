@@ -21,16 +21,27 @@ export default function VideoSection() {
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/50" />
 
-      {/* Logo centered */}
+      {/* Logo centered — fades in after 1s over 2s */}
       <div className="absolute inset-0 flex items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/victor-protrait-blanco.jpg"
           alt="Víctor Álvarez Alegría"
           className="w-[320px] md:w-[480px] lg:w-[600px] max-w-[80vw] object-contain"
-          style={{ mixBlendMode: "screen" }}
+          style={{
+            mixBlendMode: "screen",
+            opacity: 0,
+            animation: "fadeIn 2s ease-in 1s forwards",
+          }}
         />
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+      `}</style>
     </section>
   );
 }
