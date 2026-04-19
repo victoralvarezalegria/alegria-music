@@ -22,7 +22,7 @@ export default function VideoSection() {
       <div className="absolute inset-0 bg-black/50" />
 
       {/* Bottom fade into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/80 to-transparent" />
 
       {/* Logo centered — fades in after 1s over 2s */}
       <div className="absolute inset-0 flex items-center justify-center">

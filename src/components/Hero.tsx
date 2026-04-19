@@ -18,6 +18,7 @@ export default function Hero() {
         sizes="100vw"
       />
       <div className="hero-overlay absolute inset-0" />
+      <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-background via-background/60 to-transparent z-10" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 pb-20 md:pb-28">
         <p
