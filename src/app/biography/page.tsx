@@ -439,6 +439,42 @@ export default function BiographyPage() {
               ))}
             </div>
 
+            {/* Row 3 */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
+              {[
+                { src: "/images/victor-berlin-stage.jpg", caption: "Yannick Nézet-Séguin", sub: "Berliner Philharmoniker" },
+                { src: "/images/victor-berlin-section.jpg", caption: "BPO Trombone Section", sub: "Jesper Busk Sørensen · Stefan Schulz · Olaf Ott" },
+                { src: "/images/victor-orchestra.jpg", caption: "Jono Ramsay & Tomer Maschkowski", sub: "Berliner Philharmoniker" },
+                { src: "/images/victor-with-jorgen.jpg", caption: "Jörgen van Rijen", sub: "Philharmonie Berlin" },
+                { src: "/images/victor-with-zoltan.jpg", caption: "Zoltan Kiss", sub: "Italian Brass Week 2019" },
+              ].map((item) => (
+                <div key={item.src} className="group">
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm bg-background mb-3">
+                    <Image
+                      src={item.src}
+                      alt={item.caption}
+                      fill
+                      className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 768px) 50vw, 20vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+                  </div>
+                  <p
+                    className="text-sm text-foreground font-medium"
+                    style={{ fontFamily: "var(--font-body)" }}
+                  >
+                    {item.caption}
+                  </p>
+                  <p
+                    className="text-xs text-muted-foreground"
+                    style={{ fontFamily: "var(--font-body)" }}
+                  >
+                    {item.sub}
+                  </p>
+                </div>
+              ))}
+            </div>
+
             {/* Quote */}
             <div className="border-t border-border pt-10 max-w-3xl">
               <p
