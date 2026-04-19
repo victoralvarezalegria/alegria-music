@@ -19,7 +19,7 @@ export default function VideoSection() {
       </div>
 
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/75" />
 
       {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/80 to-transparent" />
