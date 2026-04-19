@@ -534,39 +534,27 @@ export default function BiographyPage() {
                 </Link>
               </div>
 
-              {/* Photos — building top, section group + atril below */}
+              {/* Photos — solo portrait top, brass group below */}
               <div className="flex flex-col gap-3 h-[520px] order-1 md:order-2">
                 <div className="relative flex-1 overflow-hidden rounded-sm bg-card">
                   <Image
-                    src="/images/victor-musiikkitalo.jpg"
-                    alt="Musiikkitalo — Helsinki Music Centre"
+                    src="/images/victor-helsinki-solo.jpg"
+                    alt="Víctor Álvarez — Helsinki Philharmonic Orchestra"
                     fill
-                    className="object-cover"
+                    className="object-cover object-center"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </div>
-                <div className="grid grid-cols-2 gap-3 h-48 shrink-0">
-                  <div className="relative overflow-hidden rounded-sm bg-card">
-                    <Image
-                      src="/images/victor-brass-section.jpg"
-                      alt="Víctor with the trombone section"
-                      fill
-                      className="object-cover object-top"
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
-                  </div>
-                  <div className="relative overflow-hidden rounded-sm bg-card">
-                    <Image
-                      src="/images/victor-stage-atril.jpg"
-                      alt="Víctor performing on stage"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
-                  </div>
+                <div className="relative h-48 shrink-0 overflow-hidden rounded-sm bg-card">
+                  <Image
+                    src="/images/victor-helsinki-brass.jpg"
+                    alt="Helsinki Philharmonic brass section"
+                    fill
+                    className="object-cover object-center"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
                 </div>
               </div>
             </div>
