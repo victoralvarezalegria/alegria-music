@@ -473,7 +473,7 @@ export default function BiographyPage() {
               {[
                 { src: "/images/victor-with-zoltan.jpg", caption: "Zoltan Kiss", sub: "Italian Brass Week 2019" },
                 { src: "/images/victor-with-ruben.jpg", caption: "Rubén Simeo", sub: "Italian Brass Week 2019" },
-                { src: "/images/mariadueñas.JPG", caption: "María Dueñas", sub: "Helsinki Philharmonic Orchestra" },
+                { src: "/images/victor-with-mariaduenas.jpg", caption: "María Dueñas", sub: "Helsinki Philharmonic Orchestra" },
                 { src: "/images/victor-berlin-section.jpg", caption: "BPO Trombone Section", sub: "Jesper Busk Sørensen · Stefan Schulz · Olaf Ott" },
               ].map((item) => (
                 <div key={item.src} className="group">
