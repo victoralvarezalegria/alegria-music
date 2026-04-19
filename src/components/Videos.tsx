@@ -10,6 +10,11 @@ const galleryPhotos = [
   "/images/victor-performance.jpg",
   "/images/victor-concert.jpg",
   "/images/victor-orchestra.jpg",
+  "/images/victor-philharmonie-berlin.jpg",
+  "/images/victor-taipei-section.jpg",
+  "/images/firma-fans.jpg",
+  "/images/Esteban-warmup.jpg",
+  "/images/jonathanreith-section.jpg",
 ];
 
 export default function Gallery() {
