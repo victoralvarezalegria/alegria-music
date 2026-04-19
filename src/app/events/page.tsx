@@ -35,7 +35,6 @@ const events: EventGroup[] = [
       { date: "17 – 21", type: "ENGAGEMENT", event: "Watches & Wonders Geneva", location: "Geneva · Switzerland" },
       { date: "24 – 26", type: "CONGRESS", event: "iBrass Congress", location: "Bétera, Valencia · Spain" },
       { date: "25", type: "CONCERT", event: "Soloist · Banda Sinfónica Centre Artístic Musical de Bétera", location: "Bétera, Valencia · Spain" },
-      { date: "27", type: "CONCERT", event: "Soloist · Banda Sinfónica Centre Artístic Musical de Bétera", location: "Bétera, Valencia · Spain" },
     ],
   },
   {
