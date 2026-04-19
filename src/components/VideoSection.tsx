@@ -21,6 +21,9 @@ export default function VideoSection() {
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/50" />
 
+      {/* Bottom fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-background to-transparent" />
+
       {/* Logo centered — fades in after 1s over 2s */}
       <div className="absolute inset-0 flex items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
