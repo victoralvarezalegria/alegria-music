@@ -162,7 +162,7 @@ export default function Header() {
           {/* Mobile language switcher */}
           <div className="border-t border-border pt-4">
             <p className="text-[10px] tracking-widest uppercase text-primary mb-3" style={{ fontFamily: "var(--font-body)" }}>
-              Language
+              {t("nav.language")}
             </p>
             <div className="flex flex-wrap gap-2">
               {languages.map((l) => (

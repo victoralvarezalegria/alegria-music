@@ -18,6 +18,7 @@ export const translations = {
     contact:     { en: "Contact",       es: "Contacto",     fi: "Yhteystiedot",      ko: "연락처",       zh: "联系",    ja: "お問い合わせ",        th: "ติดต่อ" },
     studyWithMe: { en: "Study With Me", es: "Estudia Conmigo", fi: "Opiskele Kanssani", ko: "레슨 신청", zh: "跟我学习", ja: "一緒に学ぶ",         th: "เรียนกับฉัน" },
     book:        { en: "Book",          es: "Reservar",     fi: "Varaa",             ko: "예약",         zh: "预约",    ja: "予約",                th: "จอง" },
+    language:    { en: "Language",      es: "Idioma",       fi: "Kieli",             ko: "언어",         zh: "语言",    ja: "言語",                th: "ภาษา" },
   },
   hero: {
     eyebrow:     { en: "Principal Trombone · Helsinki Philharmonic Orchestra", es: "Trombón Principal · Orquesta Filarmónica de Helsinki", fi: "Ensimmäinen pasuuna · Helsingin Filharmoninen Orkesteri", ko: "수석 트롬본 · 헬싱키 필하모닉 오케스트라", zh: "首席长号 · 赫尔辛基爱乐乐团", ja: "首席トロンボーン · ヘルシンキ・フィルハーモニー管弦楽団", th: "ทรอมโบนหลัก · วงฟีลฮาร์โมนิกเฮลซิงกิ" },
