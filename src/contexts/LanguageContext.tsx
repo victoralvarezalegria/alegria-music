@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Language, translations } from "@/lib/translations";
 
 interface LanguageContextType {
@@ -11,8 +11,21 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
+const STORAGE_KEY = "alegria-lang";
+const VALID: Language[] = ["en", "es", "fi", "ko", "zh", "ja", "th"];
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Language>("en");
+  const [lang, setLangState] = useState<Language>("en");
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY) as Language | null;
+    if (saved && VALID.includes(saved)) setLangState(saved);
+  }, []);
+
+  function setLang(l: Language) {
+    setLangState(l);
+    localStorage.setItem(STORAGE_KEY, l);
+  }
 
   function t(path: string): string {
     const parts = path.split(".");
