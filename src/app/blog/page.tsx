@@ -1,6 +1,9 @@
+"use client";
+
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const posts = [
   {
@@ -38,6 +41,8 @@ const posts = [
 ];
 
 export default function BlogPage() {
+  const { t } = useLanguage();
+
   return (
     <>
       <Header />
@@ -49,13 +54,14 @@ export default function BlogPage() {
               className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Writing & Thoughts
+              {t("blog.headerLabel")}
             </p>
             <h1
               className="text-5xl md:text-6xl font-light text-foreground"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              The <span className="italic">Blog</span>
+              {t("blog.headerTitle").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="italic">{t("blog.headerTitle").split(" ").slice(-1)[0]}</span>
             </h1>
           </div>
         </section>
@@ -65,11 +71,7 @@ export default function BlogPage() {
           <div className="max-w-7xl mx-auto px-6 md:px-10">
             <div className="grid md:grid-cols-2 gap-10">
               {posts.map((post) => (
-                <article
-                  key={post.title}
-                  className="group cursor-pointer"
-                >
-                  {/* Image */}
+                <article key={post.title} className="group cursor-pointer">
                   <div className="relative aspect-video overflow-hidden rounded-sm mb-5 bg-card">
                     <Image
                       src={post.image}
@@ -81,24 +83,16 @@ export default function BlogPage() {
                     <div className="absolute inset-0 bg-background/20 group-hover:bg-background/0 transition-colors" />
                   </div>
 
-                  {/* Meta */}
                   <div className="flex items-center gap-4 mb-3">
-                    <span
-                      className="text-[10px] tracking-widest uppercase text-primary"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
+                    <span className="text-[10px] tracking-widest uppercase text-primary" style={{ fontFamily: "var(--font-body)" }}>
                       {post.category}
                     </span>
                     <span className="text-muted-foreground/40 text-xs">·</span>
-                    <span
-                      className="text-xs text-muted-foreground"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
+                    <span className="text-xs text-muted-foreground" style={{ fontFamily: "var(--font-body)" }}>
                       {post.date}
                     </span>
                   </div>
 
-                  {/* Title */}
                   <h2
                     className="text-xl md:text-2xl font-light text-foreground mb-3 group-hover:text-primary transition-colors leading-snug"
                     style={{ fontFamily: "var(--font-heading)" }}
@@ -106,11 +100,7 @@ export default function BlogPage() {
                     {post.title}
                   </h2>
 
-                  {/* Excerpt */}
-                  <p
-                    className="text-sm text-muted-foreground leading-relaxed mb-4"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4" style={{ fontFamily: "var(--font-body)" }}>
                     {post.excerpt}
                   </p>
 
@@ -118,7 +108,7 @@ export default function BlogPage() {
                     className="text-xs tracking-widest uppercase text-muted-foreground group-hover:text-primary transition-colors"
                     style={{ fontFamily: "var(--font-body)" }}
                   >
-                    Read More →
+                    {t("blog.readMore")}
                   </span>
                 </article>
               ))}

@@ -1,7 +1,12 @@
+"use client";
+
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactPage() {
+  const { t } = useLanguage();
+
   return (
     <>
       <Header />
@@ -15,15 +20,15 @@ export default function ContactPage() {
                   className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
-                  Get in Touch
+                  {t("contact.headerLabel")}
                 </p>
                 <h1
                   className="text-4xl md:text-6xl font-light text-foreground mb-8 leading-tight"
                   style={{ fontFamily: "var(--font-heading)" }}
                 >
-                  Let&apos;s Work
+                  {t("contact.headerTitle").split(" ").slice(0, -1).join(" ")}
                   <br />
-                  <span className="italic">Together</span>
+                  <span className="italic">{t("contact.headerTitle").split(" ").slice(-1)[0]}</span>
                 </h1>
 
                 <div className="section-divider mb-10" />
@@ -32,19 +37,13 @@ export default function ContactPage() {
                   className="text-base text-muted-foreground leading-relaxed mb-10"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
-                  Available for solo engagements, orchestral performances,
-                  masterclasses, and online lessons. Don&apos;t hesitate to reach out
-                  for bookings, collaborations, or any inquiries.
+                  {t("contact.headerBody")}
                 </p>
 
-                {/* Contact details */}
                 <div className="space-y-6">
                   <div>
-                    <p
-                      className="text-xs tracking-widest uppercase text-primary mb-2"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
-                      Email
+                    <p className="text-xs tracking-widest uppercase text-primary mb-2" style={{ fontFamily: "var(--font-body)" }}>
+                      {t("contact.emailLabel")}
                     </p>
                     <a
                       href="mailto:victoralvarezalegria@gmail.com"
@@ -56,11 +55,8 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <p
-                      className="text-xs tracking-widest uppercase text-primary mb-2"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
-                      Social Media
+                    <p className="text-xs tracking-widest uppercase text-primary mb-2" style={{ fontFamily: "var(--font-body)" }}>
+                      {t("contact.socialLabel")}
                     </p>
                     <div className="space-y-1">
                       <a
@@ -101,7 +97,7 @@ export default function ContactPage() {
                         className="block text-xs tracking-widest uppercase text-muted-foreground mb-2"
                         style={{ fontFamily: "var(--font-body)" }}
                       >
-                        Name
+                        {t("contact.nameLabel")}
                       </label>
                       <input
                         id="name"
@@ -110,7 +106,7 @@ export default function ContactPage() {
                         required
                         className="w-full bg-card border border-border rounded-sm px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors"
                         style={{ fontFamily: "var(--font-body)" }}
-                        placeholder="Your name"
+                        placeholder={t("contact.namePlaceholder")}
                       />
                     </div>
                     <div>
@@ -119,7 +115,7 @@ export default function ContactPage() {
                         className="block text-xs tracking-widest uppercase text-muted-foreground mb-2"
                         style={{ fontFamily: "var(--font-body)" }}
                       >
-                        Email
+                        {t("contact.emailFieldLabel")}
                       </label>
                       <input
                         id="email"
@@ -139,7 +135,7 @@ export default function ContactPage() {
                       className="block text-xs tracking-widest uppercase text-muted-foreground mb-2"
                       style={{ fontFamily: "var(--font-body)" }}
                     >
-                      Subject
+                      {t("contact.subjectLabel")}
                     </label>
                     <select
                       id="subject"
@@ -147,12 +143,12 @@ export default function ContactPage() {
                       className="w-full bg-card border border-border rounded-sm px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
                       style={{ fontFamily: "var(--font-body)" }}
                     >
-                      <option value="">Select a topic</option>
-                      <option value="lesson">Online Lesson / Masterclass</option>
-                      <option value="concert">Concert Booking / Solo Engagement</option>
-                      <option value="orchestral">Orchestral Performance</option>
-                      <option value="media">Press / Media Inquiry</option>
-                      <option value="other">Other</option>
+                      <option value="">{t("contact.selectTopic")}</option>
+                      <option value="lesson">{t("contact.topicLesson")}</option>
+                      <option value="concert">{t("contact.topicConcert")}</option>
+                      <option value="orchestral">{t("contact.topicOrchestral")}</option>
+                      <option value="media">{t("contact.topicPress")}</option>
+                      <option value="other">{t("contact.topicOther")}</option>
                     </select>
                   </div>
 
@@ -162,7 +158,7 @@ export default function ContactPage() {
                       className="block text-xs tracking-widest uppercase text-muted-foreground mb-2"
                       style={{ fontFamily: "var(--font-body)" }}
                     >
-                      Message
+                      {t("contact.messageLabel")}
                     </label>
                     <textarea
                       id="message"
@@ -171,7 +167,7 @@ export default function ContactPage() {
                       required
                       className="w-full bg-card border border-border rounded-sm px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors resize-none"
                       style={{ fontFamily: "var(--font-body)" }}
-                      placeholder="Tell me about your project, question, or what you're looking to work on..."
+                      placeholder={t("contact.msgPlaceholder")}
                     />
                   </div>
 
@@ -180,7 +176,7 @@ export default function ContactPage() {
                     className="w-full py-4 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm"
                     style={{ fontFamily: "var(--font-body)" }}
                   >
-                    Send Message
+                    {t("contact.sendMessage")}
                   </button>
                 </form>
               </div>
