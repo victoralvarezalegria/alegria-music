@@ -75,7 +75,7 @@ const events: EventGroup[] = [
     month: "September",
     entries: [
       { date: "14 – 19", type: "ORCHESTRA", event: "Orchestral Project · Helsinki Philharmonic", location: "Helsinki · Finland" },
-      { date: "23 – 26", type: "CONCERT", event: "Monaco Show", location: "Monaco" },
+      { date: "23 – 26", type: "ENGAGEMENT", event: "Monaco Yacht Show 2026", location: "Monaco" },
       { date: "31 Aug – 3 Sep", type: "ORCHESTRA", event: "Tchaikovsky 6 · Helsinki Philharmonic", location: "Helsinki · Finland" },
     ],
   },
