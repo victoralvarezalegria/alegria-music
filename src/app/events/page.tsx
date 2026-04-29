@@ -61,8 +61,7 @@ const events: EventGroup[] = [
   {
     month: "July",
     entries: [
-      { date: "2 – 15", type: "RECORDING", event: "Recording Sessions", location: "Helsinki · Finland" },
-      { date: "15 – 19", type: "CONTEST", event: "Certamen Internacional de Bandas de Música «Ciudad de Valencia»", location: "Valencia · Spain" },
+      { date: "2 – 19", type: "RECORDING", event: "Grabaciones en Helsinki", location: "Helsinki · Finland" },
       { date: "19 – 26", type: "FESTIVAL", event: "Żywieckie Suwakowanie Festival", location: "Poland" },
     ],
   },

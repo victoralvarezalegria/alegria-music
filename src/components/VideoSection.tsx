@@ -18,14 +18,17 @@ export default function VideoSection() {
         />
       </div>
 
+      {/* Transparent interaction blocker — prevents YouTube controls from appearing on tap/click */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }} />
+
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/75" />
+      <div className="absolute inset-0 bg-black/75" style={{ zIndex: 2 }} />
 
       {/* Bottom fade into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/80 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/80 to-transparent" style={{ zIndex: 3 }} />
 
       {/* Logo centered — fades in after 1s over 2s */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 4 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/victor-protrait-blanco.jpg"
