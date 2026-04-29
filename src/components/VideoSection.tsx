@@ -4,12 +4,12 @@ export default function VideoSection() {
       {/* YouTube video background */}
       <div className="absolute inset-0 w-full h-full">
         <iframe
-          src="https://www.youtube.com/embed/l4FJULCFhbU?autoplay=1&mute=1&loop=1&playlist=l4FJULCFhbU&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+          src="https://www.youtube-nocookie.com/embed/l4FJULCFhbU?autoplay=1&mute=1&loop=1&playlist=l4FJULCFhbU&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&cc_load_policy=0"
           allow="autoplay; fullscreen"
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
-            width: "calc(100vw + 200px)",
-            height: "calc(100vh + 200px)",
+            width: "calc(100vw + 400px)",
+            height: "calc(100vh + 400px)",
             minWidth: "177.78vh",
             minHeight: "56.25vw",
             pointerEvents: "none",
@@ -22,7 +22,9 @@ export default function VideoSection() {
       <div className="absolute inset-0" style={{ zIndex: 1 }} />
 
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/75" style={{ zIndex: 2 }} />
+      <div className="absolute inset-0 bg-black/80" style={{ zIndex: 2 }} />
+      {/* Extra left-side block to cover any residual YouTube chapter/nav controls */}
+      <div className="absolute top-0 left-0 bottom-0 w-24 bg-black/60" style={{ zIndex: 3 }} />
 
       {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-48 md:h-64 bg-gradient-to-t from-background via-background/80 to-transparent" style={{ zIndex: 3 }} />
