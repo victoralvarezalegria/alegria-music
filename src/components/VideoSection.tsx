@@ -1,6 +1,6 @@
 export default function VideoSection() {
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full h-[65vh] md:h-screen overflow-hidden">
       {/* YouTube video background */}
       <div className="absolute inset-0 w-full h-full">
         <iframe
@@ -25,7 +25,7 @@ export default function VideoSection() {
       <div className="absolute inset-0 bg-black/75" style={{ zIndex: 2 }} />
 
       {/* Bottom fade into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-background via-background/80 to-transparent" style={{ zIndex: 3 }} />
+      <div className="absolute bottom-0 left-0 right-0 h-48 md:h-64 bg-gradient-to-t from-background via-background/80 to-transparent" style={{ zIndex: 3 }} />
 
       {/* Logo centered — fades in after 1s over 2s */}
       <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 4 }}>
