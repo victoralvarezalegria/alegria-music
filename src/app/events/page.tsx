@@ -129,7 +129,9 @@ const upcomingProjects: ProjectCard[] = [
   { label: "Watches & Wonders Geneva", sub: "Geneva · Apr 7–21", img: "/images/project-geneva.png" },
   { label: "iBrass Congress", sub: "Bétera, Valencia · Apr 24–26", img: "/images/project-ibrass.png" },
   { label: "Colombia Tour 2026", sub: "Medellín · Cali · May 5–24", img: "/images/project-colombia.png" },
+  { label: "Hong Kong Lower Brass Centre", sub: "Hong Kong · May 28–29", img: "/images/project-hongkong.png" },
   { label: "Masterclass Italy", sub: "Povoletto · Jun 5–7", img: "/images/project-italy.png" },
+  { label: "UAE National Orchestra", sub: "Abu Dhabi & Dubai · Jun 15–30", img: "/images/project-uaeno.png" },
   { label: "Żywieckie Suwakowanie", sub: "Poland · Jul 20–26", img: "/images/project-poland.png" },
   { label: "Trombonanza Festival", sub: "Santa Fe, Argentina · Aug 1–8", img: "/images/project-argentina.png" },
 ];
@@ -185,42 +187,58 @@ export default function EventsPage() {
             </h2>
           </div>
 
-          {/* Horizontal scroll */}
+          {/* Auto-scrolling marquee */}
           <div
-            className="flex gap-6 overflow-x-auto px-6 md:px-10 pb-4 snap-x snap-mandatory"
-            style={{ scrollbarWidth: "none" }}
+            className="overflow-hidden"
+            style={{
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+              maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+            }}
           >
-            {upcomingProjects.map((project) => (
-              <div
-                key={project.label}
-                className="shrink-0 snap-start w-56 bg-card border border-border rounded-sm overflow-hidden"
-              >
-                <div className="relative aspect-square bg-background/50 overflow-hidden">
-                  <Image
-                    src={project.img}
-                    alt={project.label}
-                    fill
-                    className="object-cover"
-                    sizes="224px"
-                  />
+            <div
+              className="flex gap-6 pl-6"
+              style={{ animation: "marquee 45s linear infinite", width: "max-content" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.animationPlayState = "paused"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.animationPlayState = "running"; }}
+            >
+              {[...upcomingProjects, ...upcomingProjects].map((project, i) => (
+                <div
+                  key={i}
+                  className="shrink-0 w-56 bg-card border border-border rounded-sm overflow-hidden"
+                >
+                  <div className="relative aspect-square bg-background/50 overflow-hidden">
+                    <Image
+                      src={project.img}
+                      alt={project.label}
+                      fill
+                      className="object-cover"
+                      sizes="224px"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <p
+                      className="text-sm text-foreground font-medium mb-1"
+                      style={{ fontFamily: "var(--font-body)" }}
+                    >
+                      {project.label}
+                    </p>
+                    <p
+                      className="text-xs text-muted-foreground"
+                      style={{ fontFamily: "var(--font-body)" }}
+                    >
+                      {project.sub}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <p
-                    className="text-sm text-foreground font-medium mb-1"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
-                    {project.label}
-                  </p>
-                  <p
-                    className="text-xs text-muted-foreground"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
-                    {project.sub}
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          <style>{`
+            @keyframes marquee {
+              0%   { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+          `}</style>
         </section>
 
         {/* ─── EVENTS LIST ─────────────────────────────────────── */}
