@@ -121,7 +121,7 @@ const pastMasterclasses: PastMasterclass[] = [
   { title: "Masterclass in Hong Kong", type: "p", id: "DY8bACLmCOo", image: "/images/victor-masterclass-hongkong.jpg" },
   { title: "Masterclass in Medellín", type: "reel", id: "DYlV91UhXl3", image: "/images/victor-masterclass-medellin.jpg" },
   { title: "Masterclass in Cali", type: "reel", id: "DYP_oFUCbH-", image: "/images/victor-masterclass-cali.jpg" },
-  { title: "Masterclass in Valencia", type: "reel", id: "DXokATSAiZv" },
+  { title: "Masterclass in Valencia", type: "reel", id: "DXokATSAiZv", image: "/images/victor-masterclass-valencia.jpg" },
   { title: "Masterclass for Young Talents in Valencia", type: "reel", id: "DXtGlUtgqaz", image: "/images/victor-masterclass-valencia-young-talents.jpg" },
 ];
 
