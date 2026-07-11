@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
+import { Play } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -111,16 +113,79 @@ interface PastMasterclass {
   title: string;
   type: "reel" | "p";
   id: string;
+  image?: string;
 }
 
 const pastMasterclasses: PastMasterclass[] = [
-  { title: "Masterclass in Italy", type: "reel", id: "DZRgw4jCmkN" },
-  { title: "Masterclass in Hong Kong", type: "p", id: "DY8bACLmCOo" },
-  { title: "Masterclass in Medellín", type: "reel", id: "DYlV91UhXl3" },
-  { title: "Masterclass in Cali", type: "reel", id: "DYP_oFUCbH-" },
+  { title: "Masterclass in Italy", type: "reel", id: "DZRgw4jCmkN", image: "/images/victor-masterclass-italy.jpg" },
+  { title: "Masterclass in Hong Kong", type: "p", id: "DY8bACLmCOo", image: "/images/victor-masterclass-hongkong.jpg" },
+  { title: "Masterclass in Medellín", type: "reel", id: "DYlV91UhXl3", image: "/images/victor-masterclass-medellin.jpg" },
+  { title: "Masterclass in Cali", type: "reel", id: "DYP_oFUCbH-", image: "/images/victor-masterclass-cali.jpg" },
   { title: "Masterclass in Valencia", type: "reel", id: "DXokATSAiZv" },
-  { title: "Masterclass for Young Talents in Valencia", type: "reel", id: "DXtGlUtgqaz" },
+  { title: "Masterclass for Young Talents in Valencia", type: "reel", id: "DXtGlUtgqaz", image: "/images/victor-masterclass-valencia-young-talents.jpg" },
 ];
+
+function MasterclassCard({ mc }: { mc: PastMasterclass }) {
+  const [playing, setPlaying] = useState(false);
+  const embedSrc = `https://www.instagram.com/${mc.type}/${mc.id}/embed`;
+
+  return (
+    <div className="bg-card border border-border rounded-sm overflow-hidden">
+      <div className="relative w-full overflow-hidden bg-black" style={{ aspectRatio: "9 / 16" }}>
+        {playing || !mc.image ? (
+          <iframe
+            src={embedSrc}
+            className="absolute inset-0 w-full h-full"
+            style={{ border: 0 }}
+            scrolling="no"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            allowFullScreen
+            loading="lazy"
+            title={mc.title}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setPlaying(true)}
+            className="group absolute inset-0 w-full h-full cursor-pointer"
+            aria-label={`Play ${mc.title}`}
+          >
+            <Image
+              src={mc.image}
+              alt={mc.title}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            />
+            <div className="absolute inset-0 bg-black/25 group-hover:bg-black/40 transition-colors" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-primary/90 group-hover:bg-primary flex items-center justify-center transition-colors shadow-lg">
+                <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
+              </div>
+            </div>
+          </button>
+        )}
+      </div>
+      <div className="p-4">
+        <p
+          className="text-sm text-foreground font-medium mb-1"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          {mc.title}
+        </p>
+        <a
+          href={`https://www.instagram.com/${mc.type}/${mc.id}/`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-muted-foreground hover:text-primary transition-colors"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          View on Instagram ↗
+        </a>
+      </div>
+    </div>
+  );
+}
 
 const typeColor: Record<EventType, string> = {
   MASTERCLASS: "text-primary",
@@ -378,43 +443,7 @@ export default function EventsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {pastMasterclasses.map((mc) => (
-                <div
-                  key={mc.id}
-                  className="bg-card border border-border rounded-sm overflow-hidden"
-                >
-                  <div
-                    className="relative w-full overflow-hidden bg-black"
-                    style={{ aspectRatio: "9 / 16" }}
-                  >
-                    <iframe
-                      src={`https://www.instagram.com/${mc.type}/${mc.id}/embed`}
-                      className="absolute inset-0 w-full h-full"
-                      style={{ border: 0 }}
-                      scrolling="no"
-                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                      allowFullScreen
-                      loading="lazy"
-                      title={mc.title}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <p
-                      className="text-sm text-foreground font-medium mb-1"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
-                      {mc.title}
-                    </p>
-                    <a
-                      href={`https://www.instagram.com/${mc.type}/${mc.id}/`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
-                      View on Instagram ↗
-                    </a>
-                  </div>
-                </div>
+                <MasterclassCard key={mc.id} mc={mc} />
               ))}
             </div>
           </div>
