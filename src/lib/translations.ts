@@ -82,6 +82,8 @@ export const translations = {
     onTheRoad:        { en: "On the Road",          es: "En Gira",               fi: "Kiertueella",               ko: "순회공연 중",          zh: "巡演中",             ja: "ツアー中",               th: "บนเส้นทาง" },
     pastEvents:       { en: "Past Events",          es: "Eventos Pasados",       fi: "Menneet Tapahtumat",        ko: "지난 이벤트",          zh: "过去的活动",          ja: "過去のイベント",          th: "กิจกรรมที่ผ่านมา" },
     archive:          { en: "Archive",              es: "Archivo",               fi: "Arkisto",                   ko: "아카이브",             zh: "档案",               ja: "アーカイブ",              th: "คลังข้อมูล" },
+    masterclassesLabel: { en: "Masterclasses",       es: "Masterclasses",         fi: "Masterclassit",             ko: "마스터클래스",          zh: "大师班",             ja: "マスタークラス",           th: "มาสเตอร์คลาส" },
+    pastMasterclasses:  { en: "Past Masterclasses",  es: "Masterclasses Pasadas", fi: "Menneet Masterclassit",     ko: "지난 마스터클래스",      zh: "过去的大师班",        ja: "過去のマスタークラス",      th: "มาสเตอร์คลาสที่ผ่านมา" },
     workWith:         { en: "Work with Víctor",     es: "Trabajar con Víctor",   fi: "Tee yhteistyötä Víctor kanssa", ko: "빅토르와 함께하기",  zh: "与维克托合作",        ja: "ヴィクトールと働く",       th: "ทำงานกับวิคเตอร์" },
     interestedBooking:{ en: "Interested in booking?", es: "¿Interesado en reservar?", fi: "Kiinnostunut varaamisesta?", ko: "예약에 관심이 있으신가요?", zh: "有兴趣预约吗？", ja: "ご予約に興味がありますか？", th: "สนใจจอง?" },
     getInTouch:       { en: "Get in Touch",         es: "Ponerse en Contacto",   fi: "Ota Yhteyttä",              ko: "연락하기",             zh: "联系我",             ja: "お問い合わせ",            th: "ติดต่อ" },

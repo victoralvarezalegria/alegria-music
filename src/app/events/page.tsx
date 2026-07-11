@@ -107,6 +107,21 @@ const pastEvents: PastEvent[] = [
   { year: "2025", event: "Youth Music Festival of The Greater Bay Area", location: "Greater Bay Area · China" },
 ];
 
+interface PastMasterclass {
+  title: string;
+  type: "reel" | "p";
+  id: string;
+}
+
+const pastMasterclasses: PastMasterclass[] = [
+  { title: "Masterclass in Italy", type: "reel", id: "DZRgw4jCmkN" },
+  { title: "Masterclass in Hong Kong", type: "p", id: "DY8bACLmCOo" },
+  { title: "Masterclass in Medellín", type: "reel", id: "DYlV91UhXl3" },
+  { title: "Masterclass in Cali", type: "reel", id: "DYP_oFUCbH-" },
+  { title: "Masterclass in Valencia", type: "reel", id: "DXokATSAiZv" },
+  { title: "Masterclass for Young Talents in Valencia", type: "reel", id: "DXtGlUtgqaz" },
+];
+
 const typeColor: Record<EventType, string> = {
   MASTERCLASS: "text-primary",
   CONCERT: "text-primary",
@@ -338,6 +353,67 @@ export default function EventsPage() {
                   >
                     {entry.location}
                   </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ─── PAST MASTERCLASSES ──────────────────────────────── */}
+        <section className="py-20 bg-background border-t border-border">
+          <div className="max-w-5xl mx-auto px-6 md:px-10">
+            <p
+              className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
+              style={{ fontFamily: "var(--font-body)" }}
+            >
+              {t("events.masterclassesLabel")}
+            </p>
+            <h2
+              className="text-4xl md:text-5xl font-light text-foreground mb-12 leading-tight"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {t("events.pastMasterclasses").split(" ").slice(0, -1).join(" ")}{" "}
+              <span className="italic">{t("events.pastMasterclasses").split(" ").slice(-1)}</span>
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pastMasterclasses.map((mc) => (
+                <div
+                  key={mc.id}
+                  className="bg-card border border-border rounded-sm overflow-hidden"
+                >
+                  <div
+                    className="relative w-full overflow-hidden bg-black"
+                    style={{ aspectRatio: "9 / 16" }}
+                  >
+                    <iframe
+                      src={`https://www.instagram.com/${mc.type}/${mc.id}/embed`}
+                      className="absolute inset-0 w-full h-full"
+                      style={{ border: 0 }}
+                      scrolling="no"
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                      allowFullScreen
+                      loading="lazy"
+                      title={mc.title}
+                    />
+                  </div>
+                  <div className="p-4">
+                    <p
+                      className="text-sm text-foreground font-medium mb-1"
+                      style={{ fontFamily: "var(--font-body)" }}
+                    >
+                      {mc.title}
+                    </p>
+                    <a
+                      href={`https://www.instagram.com/${mc.type}/${mc.id}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                      style={{ fontFamily: "var(--font-body)" }}
+                    >
+                      View on Instagram ↗
+                    </a>
+                  </div>
                 </div>
               ))}
             </div>
