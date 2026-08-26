@@ -78,7 +78,7 @@ export default function Header() {
             </Link>
           ))}
           <Link
-            href="/book"
+            href="/masterclass"
             className="text-xs tracking-widest uppercase font-medium text-primary hover:text-primary/80 transition-colors border-b border-primary pb-0.5"
           >
             {t("nav.studyWithMe")}
@@ -145,7 +145,7 @@ export default function Header() {
             </Link>
           ))}
           <Link
-            href="/book"
+            href="/masterclass"
             onClick={() => setMenuOpen(false)}
             className="text-sm tracking-widest uppercase font-medium text-primary"
           >
