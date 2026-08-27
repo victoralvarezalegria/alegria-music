@@ -17,7 +17,7 @@ const BENEFITS = [
   },
   {
     title: "Win When It Counts:",
-    body: "The exact preparation system Victor used to win Principal Trombone of the Helsinki Philharmonic and the Macao Orchestra.",
+    body: "The exact preparation system Victor used to win Principal Trombone of the Helsinki Philharmonic and a place at the Karajan Academy of the Berlin Philharmonic.",
   },
   {
     title: "Practice Less, Progress More:",
