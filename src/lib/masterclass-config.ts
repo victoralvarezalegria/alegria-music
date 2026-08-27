@@ -4,14 +4,14 @@
 // DTSTART/DTEND must be kept in sync by hand — see MASTERCLASS_START_UTC below.
 export const MASTERCLASS_IS_PLACEHOLDER = false;
 
-export const MASTERCLASS_DATE_HEADING = "August 27th";
-export const MASTERCLASS_DAY = "Thursday";
+export const MASTERCLASS_DATE_HEADING = "September 7th";
+export const MASTERCLASS_DAY = "Monday";
 export const MASTERCLASS_TIME_LOCAL = "7:00pm Helsinki time (EEST)";
 
-// UTC, matches public/masterclass.ics DTSTART/DTEND. Helsinki is EEST
-// (UTC+3) in August, so 7:00pm local is 16:00 UTC.
-export const MASTERCLASS_START_UTC = "20260827T160000Z";
-export const MASTERCLASS_END_UTC = "20260827T173000Z";
+// UTC, matches public/masterclass.ics DTSTART/DTEND. Helsinki is still EEST
+// (UTC+3) in early September, so 7:00pm local is 16:00 UTC.
+export const MASTERCLASS_START_UTC = "20260907T160000Z";
+export const MASTERCLASS_END_UTC = "20260907T173000Z";
 
 export const MASTERCLASS_ZOOM_URL =
   "https://us06web.zoom.us/j/83438053066?pwd=fcYPUlPcObJwURbDLo9Ku5wCHGlSKD.1";
