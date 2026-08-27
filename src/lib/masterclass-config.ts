@@ -4,9 +4,8 @@
 // DTSTART/DTEND must be kept in sync by hand — see MASTERCLASS_START_UTC below.
 export const MASTERCLASS_IS_PLACEHOLDER = false;
 
-export const MASTERCLASS_DATE_HEADING = "September 7th";
-export const MASTERCLASS_DAY = "Monday";
-export const MASTERCLASS_TIME_LOCAL = "7:00pm Helsinki time (EEST)";
+// Display strings (date, day, time) live in translations.ts under the
+// "masterclass" namespace, translated for every language the site supports.
 
 // UTC, matches public/masterclass.ics DTSTART/DTEND. Helsinki is still EEST
 // (UTC+3) in early September, so 7:00pm local is 16:00 UTC.

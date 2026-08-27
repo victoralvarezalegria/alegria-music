@@ -1,10 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
-  MASTERCLASS_DATE_HEADING,
-  MASTERCLASS_DAY,
-  MASTERCLASS_TIME_LOCAL,
   MASTERCLASS_GOOGLE_CALENDAR_URL,
   MASTERCLASS_IS_PLACEHOLDER,
   MASTERCLASS_ZOOM_URL,
@@ -12,12 +12,9 @@ import {
   MASTERCLASS_ZOOM_PASSCODE,
 } from "@/lib/masterclass-config";
 
-export const metadata = {
-  title: "You're Registered. The 1% Method Masterclass",
-  robots: "noindex",
-};
-
 export default function MasterclassRegisteredPage() {
+  const { t } = useLanguage();
+
   return (
     <>
       <Header />
@@ -28,25 +25,25 @@ export default function MasterclassRegisteredPage() {
               className="text-xs tracking-[0.3em] uppercase text-primary mb-6"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              You&apos;re registered
+              {t("masterclass.confirmedLabel")}
             </p>
 
             <h1
               className="text-4xl md:text-6xl font-semibold text-white leading-tight"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              {MASTERCLASS_DATE_HEADING}
+              {t("masterclass.dateHeading")}
             </h1>
             <p
               className="italic text-xl md:text-3xl text-foreground mt-1"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              {MASTERCLASS_DAY}
+              {t("masterclass.day")}
             </p>
 
             <div className="flex items-center justify-center mt-5">
               <span className="text-base font-medium text-foreground" style={{ fontFamily: "var(--font-body)" }}>
-                {MASTERCLASS_TIME_LOCAL}
+                {t("masterclass.timeLocal")}
               </span>
             </div>
 
@@ -63,7 +60,7 @@ export default function MasterclassRegisteredPage() {
               className="text-base text-muted-foreground mt-10 max-w-xs mx-auto"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Add it to your calendar now so it doesn&apos;t slip past you.
+              {t("masterclass.addToCalendarPrompt")}
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mt-4 max-w-md mx-auto">
@@ -83,7 +80,7 @@ export default function MasterclassRegisteredPage() {
                   <rect x="5.5" y="16" width="5" height="3" rx="1" fill="#34A853" />
                   <rect x="13" y="16" width="5" height="3" rx="1" fill="#4285F4" />
                 </svg>
-                Google Calendar
+                {t("masterclass.googleCalendarLabel")}
               </a>
 
               <a
@@ -96,17 +93,16 @@ export default function MasterclassRegisteredPage() {
                   <path d="M16.4 12.6c0-2 1.6-3 1.7-3.05-.9-1.35-2.35-1.55-2.85-1.55-1.2-.12-2.35.72-2.97.72-.61 0-1.56-.7-2.57-.68-1.32.02-2.54.77-3.22 1.95-1.37 2.39-.35 5.93 1 7.87.65.95 1.43 2.02 2.45 1.98.98-.04 1.35-.64 2.54-.64s1.52.64 2.56.62c1.06-.02 1.73-.97 2.38-1.92.75-1.1 1.06-2.17 1.07-2.22-.02-.01-2.06-.79-2.09-3.08z" />
                   <path d="M14.6 6.5c.54-.66.9-1.57.8-2.5-.78.03-1.72.52-2.28 1.17-.5.58-.94 1.51-.82 2.4.87.07 1.76-.44 2.3-1.07z" />
                 </svg>
-                Apple Calendar
+                {t("masterclass.appleCalendarLabel")}
               </a>
             </div>
 
             <div className="mt-12 p-7 bg-card border border-primary/40 rounded-lg text-left max-w-md mx-auto">
               <h2 className="text-2xl font-semibold text-white mb-3" style={{ fontFamily: "var(--font-heading)" }}>
-                Join the session
+                {t("masterclass.joinHeading")}
               </h2>
               <p className="text-[15px] leading-relaxed text-foreground mb-4" style={{ fontFamily: "var(--font-body)" }}>
-                The masterclass runs live on Zoom. Save this link — you&apos;ll need it at{" "}
-                {MASTERCLASS_TIME_LOCAL} on {MASTERCLASS_DAY}, {MASTERCLASS_DATE_HEADING}.
+                {t("masterclass.joinBody")}
               </p>
               <a
                 href={MASTERCLASS_ZOOM_URL}
@@ -115,25 +111,25 @@ export default function MasterclassRegisteredPage() {
                 className="block w-full text-center py-3.5 bg-primary text-primary-foreground font-bold text-sm tracking-wide uppercase rounded-sm hover:bg-primary/90 transition-colors mb-4"
                 style={{ fontFamily: "var(--font-body)" }}
               >
-                Join on Zoom
+                {t("masterclass.joinButton")}
               </a>
               <div className="text-sm text-muted-foreground space-y-1" style={{ fontFamily: "var(--font-body)" }}>
-                <p>Meeting ID: <span className="text-foreground">{MASTERCLASS_ZOOM_MEETING_ID}</span></p>
-                <p>Passcode: <span className="text-foreground">{MASTERCLASS_ZOOM_PASSCODE}</span></p>
+                <p>{t("masterclass.meetingIdLabel")} <span className="text-foreground">{MASTERCLASS_ZOOM_MEETING_ID}</span></p>
+                <p>{t("masterclass.passcodeLabel")} <span className="text-foreground">{MASTERCLASS_ZOOM_PASSCODE}</span></p>
               </div>
             </div>
 
             <div className="mt-6 p-7 bg-card border border-border rounded-lg text-left max-w-md mx-auto">
               <h2 className="text-2xl font-semibold text-white mb-3" style={{ fontFamily: "var(--font-heading)" }}>
-                What happens next
+                {t("masterclass.nextHeading")}
               </h2>
               <p className="text-[15px] leading-relaxed text-foreground" style={{ fontFamily: "var(--font-body)" }}>
-                Check your inbox. A confirmation is on its way with everything you need.
+                {t("masterclass.nextBody1")}
               </p>
               <p className="text-[15px] leading-relaxed text-foreground mt-2.5" style={{ fontFamily: "var(--font-body)" }}>
-                You&apos;ll get the <span className="font-bold text-white">join link and a reminder</span> before
-                the session starts. If nothing arrives in a few minutes, check your promotions or spam
-                folder and drag it to your main inbox.
+                {t("masterclass.nextBody2Pre")}
+                <span className="font-bold text-white">{t("masterclass.nextBody2Bold")}</span>
+                {t("masterclass.nextBody2Post")}
               </p>
             </div>
 
@@ -142,7 +138,7 @@ export default function MasterclassRegisteredPage() {
               className="inline-block mt-10 text-sm text-muted-foreground hover:text-primary transition-colors"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              &larr; Back to the masterclass page
+              {t("masterclass.backLink")}
             </Link>
           </div>
         </section>

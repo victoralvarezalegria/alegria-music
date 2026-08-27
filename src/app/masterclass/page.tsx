@@ -5,28 +5,18 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const BENEFITS = [
-  {
-    title: "Unlock Your High Register:",
-    body: "The air and lip-corner system that expands your range without pressure, forcing, or wrecked chops.",
-  },
-  {
-    title: "Play With Real Confidence:",
-    body: "Why stage fright is not a stage problem, and the off-stage habits that end it for good.",
-  },
-  {
-    title: "Win When It Counts:",
-    body: "The exact preparation system Victor used to win Principal Trombone of the Helsinki Philharmonic, a place at the Karajan Academy of the Berlin Philharmonic, and the Macao Orchestra.",
-  },
-  {
-    title: "Practice Less, Progress More:",
-    body: "The 40/60 rule that gets you further in 60 to 90 focused minutes than 4 hours of grinding ever will.",
-  },
-];
+const BENEFIT_KEYS = [
+  { title: "benefit1Title", body: "benefit1Body" },
+  { title: "benefit2Title", body: "benefit2Body" },
+  { title: "benefit3Title", body: "benefit3Body" },
+  { title: "benefit4Title", body: "benefit4Body" },
+] as const;
 
 export default function MasterclassPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -52,12 +42,12 @@ export default function MasterclassPage() {
       }
       setError(
         data && data.error === "invalid_email"
-          ? "That email does not look right. Try again?"
-          : "Something went wrong saving your seat. Please try again.",
+          ? t("masterclass.errorInvalidEmail")
+          : t("masterclass.errorGeneric"),
       );
       setSubmitting(false);
     } catch {
-      setError("Could not reach the server. Check your connection and try again.");
+      setError(t("masterclass.errorNetwork"));
       setSubmitting(false);
     }
   }
@@ -72,15 +62,15 @@ export default function MasterclassPage() {
               className="text-xs tracking-[0.3em] uppercase text-primary mb-5"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Exclusive New Training For Brass Players:
+              {t("masterclass.eyebrow")}
             </p>
             <h1
               className="text-4xl md:text-6xl font-semibold text-white leading-[1.12] tracking-tight"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Transform Your Brass Playing!
+              {t("masterclass.headingMain")}
               <span className="block italic font-normal text-2xl md:text-4xl text-foreground mt-3">
-                Unlock Range, Confidence and Audition-Winning Consistency with the 1% Method.
+                {t("masterclass.headingSub")}
               </span>
             </h1>
 
@@ -89,7 +79,7 @@ export default function MasterclassPage() {
               className="inline-block mt-9 mb-2 px-11 py-5 bg-primary text-primary-foreground font-bold text-base md:text-lg tracking-wide uppercase rounded-sm shadow-[0_12px_30px_rgba(255,107,53,0.28)] hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              YES! Save My Free Seat Now!
+              {t("masterclass.ctaButton")}
             </button>
           </div>
 
@@ -109,11 +99,11 @@ export default function MasterclassPage() {
                 className="text-xs text-center tracking-[0.2em] uppercase text-primary mb-7"
                 style={{ fontFamily: "var(--font-body)" }}
               >
-                Exclusive Live Training With Victor Alegria:
+                {t("masterclass.benefitsLabel")}
               </p>
 
               <ul className="space-y-6">
-                {BENEFITS.map((b) => (
+                {BENEFIT_KEYS.map((b) => (
                   <li
                     key={b.title}
                     className="relative pl-8 text-[17px] leading-relaxed text-foreground"
@@ -122,7 +112,8 @@ export default function MasterclassPage() {
                     <span className="absolute left-0 top-0.5 text-primary font-bold" aria-hidden="true">
                       &#10003;
                     </span>
-                    <span className="font-bold text-white">{b.title}</span> {b.body}
+                    <span className="font-bold text-white">{t(`masterclass.${b.title}`)}</span>{" "}
+                    {t(`masterclass.${b.body}`)}
                   </li>
                 ))}
               </ul>
@@ -131,7 +122,7 @@ export default function MasterclassPage() {
                 className="text-center text-2xl md:text-3xl font-semibold text-white mt-9 mb-1"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                One live session. When it&apos;s full, it&apos;s full!
+                {t("masterclass.fireLine")}
               </p>
 
               <div className="text-center mt-6">
@@ -140,13 +131,13 @@ export default function MasterclassPage() {
                   className="inline-block px-11 py-5 bg-primary text-primary-foreground font-bold text-base md:text-lg tracking-wide uppercase rounded-sm shadow-[0_12px_30px_rgba(255,107,53,0.28)] hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
-                  YES! Save My Free Seat Now!
+                  {t("masterclass.ctaButton")}
                 </button>
                 <p
                   className="text-sm text-muted-foreground mt-4 tracking-wide"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
-                  100% Free. Seating is limited to 100 attendees!
+                  {t("masterclass.freeNote")}
                 </p>
               </div>
             </div>
@@ -154,12 +145,10 @@ export default function MasterclassPage() {
 
           <div className="max-w-3xl mx-auto px-6 md:px-10 mt-16 text-center">
             <p className="text-xs text-muted-foreground leading-relaxed" style={{ fontFamily: "var(--font-body)" }}>
-              This site is not a part of the Facebook website or Facebook Inc. Additionally, this site is
-              NOT endorsed by Facebook in any way. FACEBOOK is a trademark of FACEBOOK, Inc.
+              {t("masterclass.disclaimer1")}
             </p>
             <p className="text-xs text-muted-foreground leading-relaxed mt-2" style={{ fontFamily: "var(--font-body)" }}>
-              NOT GOOGLE: This site is not a part of the Google website or Google Inc. Additionally,
-              this site is NOT endorsed by Google in any way.
+              {t("masterclass.disclaimer2")}
             </p>
           </div>
         </section>
@@ -185,17 +174,16 @@ export default function MasterclassPage() {
               className="text-3xl font-semibold text-white mb-2.5"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Reserve Your Free Seat
+              {t("masterclass.modalTitle")}
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6" style={{ fontFamily: "var(--font-body)" }}>
-              The 1% Method: a live masterclass with Victor Alegria, Principal Trombone of the
-              Helsinki Philharmonic.
+              {t("masterclass.modalSubtitle")}
             </p>
             <form onSubmit={handleSubmit} className="space-y-3.5">
               <input
                 type="text"
                 required
-                placeholder="Your first name"
+                placeholder={t("masterclass.firstNamePlaceholder")}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="w-full bg-background border border-border rounded-sm px-4 py-3.5 text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
@@ -204,7 +192,7 @@ export default function MasterclassPage() {
               <input
                 type="email"
                 required
-                placeholder="Your best email"
+                placeholder={t("masterclass.emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-background border border-border rounded-sm px-4 py-3.5 text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
@@ -216,7 +204,7 @@ export default function MasterclassPage() {
                 className="w-full py-4 bg-primary text-primary-foreground font-bold text-base tracking-wide uppercase rounded-sm shadow-[0_10px_24px_rgba(255,107,53,0.28)] hover:bg-primary/90 transition-colors disabled:opacity-60"
                 style={{ fontFamily: "var(--font-body)" }}
               >
-                {submitting ? "SAVING YOUR SEAT..." : "SAVE MY SEAT!"}
+                {submitting ? t("masterclass.submitLoading") : t("masterclass.submitIdle")}
               </button>
             </form>
             {error && (
@@ -225,7 +213,7 @@ export default function MasterclassPage() {
               </p>
             )}
             <p className="text-xs text-muted-foreground mt-3.5" style={{ fontFamily: "var(--font-body)" }}>
-              We&apos;ll email you the link and a reminder. No spam, ever.
+              {t("masterclass.modalFine")}
             </p>
           </div>
         </div>
