@@ -4,10 +4,12 @@ import Footer from "@/components/Footer";
 import {
   MASTERCLASS_DATE_HEADING,
   MASTERCLASS_DAY,
-  MASTERCLASS_TIME_EST,
-  MASTERCLASS_TIME_PST,
+  MASTERCLASS_TIME_LOCAL,
   MASTERCLASS_GOOGLE_CALENDAR_URL,
   MASTERCLASS_IS_PLACEHOLDER,
+  MASTERCLASS_ZOOM_URL,
+  MASTERCLASS_ZOOM_MEETING_ID,
+  MASTERCLASS_ZOOM_PASSCODE,
 } from "@/lib/masterclass-config";
 
 export const metadata = {
@@ -42,13 +44,9 @@ export default function MasterclassRegisteredPage() {
               {MASTERCLASS_DAY}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3.5 mt-5">
+            <div className="flex items-center justify-center mt-5">
               <span className="text-base font-medium text-foreground" style={{ fontFamily: "var(--font-body)" }}>
-                {MASTERCLASS_TIME_EST}
-              </span>
-              <span className="hidden sm:block w-1.5 h-1.5 rounded-full bg-muted-foreground" aria-hidden="true" />
-              <span className="text-base font-medium text-foreground" style={{ fontFamily: "var(--font-body)" }}>
-                {MASTERCLASS_TIME_PST}
+                {MASTERCLASS_TIME_LOCAL}
               </span>
             </div>
 
@@ -102,7 +100,30 @@ export default function MasterclassRegisteredPage() {
               </a>
             </div>
 
-            <div className="mt-12 p-7 bg-card border border-border rounded-lg text-left max-w-md mx-auto">
+            <div className="mt-12 p-7 bg-card border border-primary/40 rounded-lg text-left max-w-md mx-auto">
+              <h2 className="text-2xl font-semibold text-white mb-3" style={{ fontFamily: "var(--font-heading)" }}>
+                Join the session
+              </h2>
+              <p className="text-[15px] leading-relaxed text-foreground mb-4" style={{ fontFamily: "var(--font-body)" }}>
+                The masterclass runs live on Zoom. Save this link — you&apos;ll need it at{" "}
+                {MASTERCLASS_TIME_LOCAL} on {MASTERCLASS_DAY}, {MASTERCLASS_DATE_HEADING}.
+              </p>
+              <a
+                href={MASTERCLASS_ZOOM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center py-3.5 bg-primary text-primary-foreground font-bold text-sm tracking-wide uppercase rounded-sm hover:bg-primary/90 transition-colors mb-4"
+                style={{ fontFamily: "var(--font-body)" }}
+              >
+                Join on Zoom
+              </a>
+              <div className="text-sm text-muted-foreground space-y-1" style={{ fontFamily: "var(--font-body)" }}>
+                <p>Meeting ID: <span className="text-foreground">{MASTERCLASS_ZOOM_MEETING_ID}</span></p>
+                <p>Passcode: <span className="text-foreground">{MASTERCLASS_ZOOM_PASSCODE}</span></p>
+              </div>
+            </div>
+
+            <div className="mt-6 p-7 bg-card border border-border rounded-lg text-left max-w-md mx-auto">
               <h2 className="text-2xl font-semibold text-white mb-3" style={{ fontFamily: "var(--font-heading)" }}>
                 What happens next
               </h2>
