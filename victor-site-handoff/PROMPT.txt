@@ -1,0 +1,164 @@
+You are working inside the alegriamusic.net repository (Next.js App Router, deployed on Vercel). A folder named `victor-site-handoff` has been placed at the repo root. It contains a finished, tested funnel: seven HTML pages, three serverless API routes, and assets. They are live today on a separate Vercel project at https://webinar-registration-steel.vercel.app. Your job is to make the same pages work on https://www.alegriamusic.net with identical behaviour, wired to ActiveCampaign and Calendly, and to prove every step with a real check. Work through every section below in order. Do not stop early. Do not ask which option to pick when this file already picks it.
+
+Rules that override anything else you might decide:
+- Do not change any copy, layout, colour, font, order, or image on any page. Port them as they are.
+- Do not add sections, badges, pills, headers, or "improvements".
+- Do not change any ActiveCampaign list id, tag id, or the JSON shapes the API routes return. The pages depend on them.
+- Do not put any key or token in the repo. They go in Vercel environment variables only.
+- If something in this repo makes a step impossible as written, finish every other step, then report exactly which step failed and why. Do not improvise a different flow.
+
+==================================================================
+1. THE FILES
+==================================================================
+
+victor-site-handoff/
+  funnel/index.html          LIVE masterclass registration page (was "/" on the standalone project)
+  funnel/registered.html     confirmation after live registration (date + calendar buttons)
+  funnel/watch.html          AUTOMATED masterclass page (evergreen, no date)
+  funnel/masterclass.html    replay room (Loom embed) with a button to /apply
+  funnel/apply.html          book-a-call page (Calendly inline)
+  funnel/booked.html         post-booking homework page (pre-call video, checklist)
+  funnel/waitlist.html       waitlist page (name + email + phone)
+  funnel/api/subscribe.js    live + automated registration -> ActiveCampaign
+  funnel/api/book.js         Calendly booking -> ActiveCampaign "Booked Call"
+  funnel/api/waitlist.js     waitlist form -> ActiveCampaign "waitlist"
+  funnel/assets/masterclass.ics, victor-precall.mp4, victor-precall-poster.jpg
+  funnel/victor.jpg
+  funnel/vercel.json         (only the .ics header block matters, see section 5)
+  ENV-VALUES.txt             the environment variable values (Victor's own keys)
+
+==================================================================
+2. URL MAP. Create exactly these routes.
+==================================================================
+
+  /masterclass-live   <- funnel/index.html
+  /registered         <- funnel/registered.html
+  /watch              <- funnel/watch.html
+  /masterclass        <- funnel/masterclass.html
+  /apply              <- funnel/apply.html
+  /booked             <- funnel/booked.html
+  /waitlist           <- funnel/waitlist.html
+
+The live registration page used to be the root of the standalone project. This site already has a homepage, so it lives at /masterclass-live here.
+
+How to mount each page: create app/<route>/page.tsx that renders the file's <body> content with the file's own <style> block and <script> blocks moved over unchanged. The Google Fonts <link> tags (Space Grotesk, Cormorant Garamond) and, for /apply only, the Calendly widget.css and widget.js tags must load on those pages. If the repo's global CSS fights the page styles, wrap the page in <div class="funnel"> and prefix the page's selectors. Using dangerouslySetInnerHTML for the body so the inline scripts keep working is acceptable for these seven pages. Do not convert the inline scripts to React logic.
+
+==================================================================
+3. FLOW MAP. Every arrow below must work on production.
+==================================================================
+
+  /masterclass-live  --popup submit-->  POST /api/subscribe (no source)  -->  /registered
+  /watch             --popup submit-->  POST /api/subscribe {source:"ondemand"}  -->  /masterclass
+  /masterclass       --button-->        /apply
+  /apply             --Calendly booking-->  POST /api/book {eventUri, inviteeUri}  -->  /booked
+  /booked            reads first name from sessionStorage (set by /apply), plays the pre-call video
+  /waitlist          --form submit-->   POST /api/waitlist  -->  "You're on the list" state, button to /masterclass
+  /apply Step 1 link  -->  /masterclass
+  /registered "back" link  -->  /masterclass-live
+
+To make the arrows work you must rewrite the internal links. In every page file, search for these strings and replace with the absolute site path:
+
+  href="index.html"         ->  href="/masterclass-live"
+  href="registered.html"    ->  href="/registered"
+  href="masterclass.html"   ->  href="/masterclass"
+  href="apply.html"         ->  href="/apply"
+  href="booked.html"        ->  href="/booked"
+  THANK_YOU_PAGE = "registered"    ->  THANK_YOU_PAGE = "/registered"
+  THANK_YOU_PAGE = "masterclass"   ->  THANK_YOU_PAGE = "/masterclass"
+  BOOKED_PAGE = "booked"           ->  BOOKED_PAGE = "/booked"
+  src="assets/...", poster="assets/..." and href="assets/..."  ->  "/assets/..."
+  src="victor.jpg"                 ->  src="/victor.jpg"
+
+After rewriting, grep all seven files for `.html"` and for `="assets/`. Both must return zero matches.
+
+==================================================================
+4. API ROUTES. Port each to app/api/<name>/route.ts exporting POST.
+==================================================================
+
+Keep the validation rules, the HTTP status codes and the JSON responses exactly as in the source files. The pages read `ok`, `error`, `contactId`, `firstName`.
+
+  POST /api/subscribe   env: AC_URL, AC_KEY, AC_LIST_ID, AC_TAG_ID, AC_ONDEMAND_LIST_ID, AC_ONDEMAND_TAG_ID
+      no source          -> contact sync, subscribe list 5 "Registered for Webinar", tag 1
+      source "ondemand"  -> contact sync, subscribe list 10 "Automated Masterclass Leads", tag 3
+      It must never fall back from one list to the other. Missing env -> 500 not_configured.
+
+  POST /api/book        env: AC_URL, AC_KEY, AC_BOOKED_LIST_ID, AC_BOOKED_TAG_ID (optional), CALENDLY_TOKEN
+      body {eventUri, inviteeUri} -> GET the invitee from api.calendly.com with Bearer CALENDLY_TOKEN
+      -> contact sync (email, name from the invitee), subscribe list 8 "Booked Call", add a note with the start time
+      Without CALENDLY_TOKEN it returns 500 need_calendly_token. The page still redirects to /booked.
+      Also accepts body {email, firstName, lastName, startTime} directly (used by /booked as a fallback).
+
+  POST /api/waitlist    env: AC_URL, AC_KEY, AC_WAITLIST_LIST_ID, AC_WAITLIST_TAG_ID
+      body {firstName, lastName, email, phone} -> contact sync with phone on the standard phone field,
+      subscribe list 9 "waitlist", add tag 4 "Waitlist".
+
+All three call ActiveCampaign v3 with header `Api-Token: <AC_KEY>` at `${AC_URL}/api/3/...`. The source files show the exact endpoints and bodies. Copy them.
+
+==================================================================
+5. ASSETS AND HEADERS
+==================================================================
+
+Copy funnel/assets/* to public/assets/ and funnel/victor.jpg to public/victor.jpg. Keep filenames.
+
+Add to next.config.js headers():
+  source: /assets/masterclass.ics
+  Content-Type: text/calendar; charset=utf-8
+  Content-Disposition: attachment; filename="masterclass.ics"
+
+The pre-call video is 10.7 MB. Serve it as a static file. Do not run it through the image optimiser or any transform.
+
+==================================================================
+6. ENVIRONMENT VARIABLES
+==================================================================
+
+Add every line from ENV-VALUES.txt to the Vercel project for BOTH Production and Development (Vercel dashboard > Settings > Environment Variables, or `vercel env add`). The one value marked as a placeholder, CALENDLY_TOKEN, must be generated by Victor in Calendly: Integrations & apps > API & webhooks > Personal access token. Free plan is fine. If it is not available yet, set every other variable, note it in the report, and continue.
+
+Never commit ENV-VALUES.txt. Add it to .gitignore.
+
+==================================================================
+7. THE CALENDLY TO BOOKED-PAGE MECHANISM. Keep it exactly.
+==================================================================
+
+apply.html embeds Calendly inline. When a visitor books, Calendly posts a `calendly.event_scheduled` message to the page. The page's script:
+  1. checks the message origin is https://calendly.com,
+  2. posts the event and invitee URIs to /api/book,
+  3. stores the returned first name in sessionStorage as `va_name`,
+  4. redirects to /booked.
+This works on Calendly's free plan and needs no paid redirect setting. Keep the whole `window.addEventListener('message', ...)` block and the `calendly.page_height` handling (it resizes the calendar so it never scrolls inside its own box). Do not replace it with Calendly's "redirect to external site" option.
+
+booked.html greets the visitor from `va_name`. If it ever arrives with `invitee_full_name` / `invitee_email` / `event_start_time` in the URL, it posts those to /api/book itself and scrubs them from the address bar. Keep that too.
+
+==================================================================
+8. DEPLOY
+==================================================================
+
+Commit, push, let Vercel deploy production. Then run section 9 against https://www.alegriamusic.net, not against localhost.
+
+==================================================================
+9. VERIFICATION. Run every check. Report what you observed for each.
+==================================================================
+
+For every check, print the actual observed value. "Works" is not a result.
+
+ 9.1  curl -sI each of the seven URLs on production. All must be 200.
+ 9.2  curl -s https://www.alegriamusic.net/assets/masterclass.ics -I shows Content-Type text/calendar and Content-Disposition attachment.
+ 9.3  Link audit: fetch each page's HTML from production and grep for `.html"` and `="assets/`. Zero matches on every page.
+ 9.4  /api/subscribe validation: POST {"email":"nope","firstName":"T"} -> 400 invalid_email. GET -> 405.
+ 9.5  /api/subscribe live path: POST {"email":"port-test-live@example.com","firstName":"Port"} -> 200 with contactId. Then with AC_KEY, GET ${AC_URL}/api/3/contacts/<id>/contactLists and confirm list 5 status 1. Delete the contact: DELETE ${AC_URL}/api/3/contacts/<id>.
+ 9.6  /api/subscribe ondemand path: same with "source":"ondemand" and email port-test-ondemand@example.com -> list 10 only, never list 5. Delete the contact.
+ 9.7  /api/waitlist: POST {"firstName":"Port","lastName":"Test","email":"port-test-wl@example.com","phone":"+358 40 123 4567"} -> 200. Confirm list 9 status 1, tag 4, and phone stored on the contact. Delete the contact.
+ 9.8  /api/book without a real booking: POST {"eventUri":"https://api.calendly.com/scheduled_events/00000000-0000-0000-0000-000000000000","inviteeUri":"https://api.calendly.com/scheduled_events/00000000-0000-0000-0000-000000000000/invitees/00000000-0000-0000-0000-000000000000"} -> expect `calendly_lookup_failed` if CALENDLY_TOKEN is set (proves the token is being used), or `need_calendly_token` if it is not.
+ 9.9  Browser flow (Playwright or a real browser at 1440x900 and 390x844):
+      a. /watch: open the popup, submit a test name and email, land on /masterclass, Loom iframe present. Delete the contact afterwards.
+      b. /masterclass: the button goes to /apply.
+      c. /apply: the Calendly iframe is present without any interaction, its height follows Calendly's content (no scrollbar inside the calendar), and `document.documentElement.scrollWidth === clientWidth` at both widths.
+      d. /waitlist: submit the form, the "You're on the list" state appears, its button goes to /masterclass. Delete the contact.
+      e. /booked: the <video> element exists, its source resolves 200, and it plays.
+      f. Every page at 390px: scrollWidth equals clientWidth.
+ 9.10 The one check automation cannot do: a human books a real slot on /apply. Calendly blocks scripted bookings at the final step. Ask Victor to book a test slot on /apply, confirm he lands on /booked with his first name in the headline and appears on list 8 "Booked Call" within a few seconds, then cancel the booking and delete the contact. Put this as the last line of the report, marked as pending until he does it.
+
+==================================================================
+10. REPORT
+==================================================================
+
+Finish with a table: one row per check in section 9, columns Check / Observed / Pass-Fail. Then a list of anything you could not complete and the exact reason. Then the two ActiveCampaign draft emails that already link here ("Post-masterclass 01 - Thank you. And the waitlist" and "Automated masterclass 01 - You're in. Here's your masterclass") are safe to attach to their automations: "Automated Masterclass" (triggers on list 10) sends the second one. Say so in the report only if 9.1 through 9.9 all pass.

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import "./globals.css";
+import "../globals.css";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-heading",
