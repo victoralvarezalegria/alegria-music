@@ -1,0 +1,25 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Victor Alegria Music//The 1% Method Masterclass//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:1percent-masterclass-placeholder@alegriamusic.net
+DTSTAMP:20260825T120000Z
+DTSTART:20260917T230000Z
+DTEND:20260918T003000Z
+SUMMARY:The 1% Method Masterclass with Victor Alegria
+DESCRIPTION:Unlock range\, confidence and audition-winning consistency with
+  the 1% Method.\n\nA live masterclass with Victor Alegria\, Principal Trombo
+ ne of the Helsinki Philharmonic.\n\nThe join link arrives by email before th
+ e session.\n\nNote: this date is a placeholder. Victor confirms the final ti
+ me by email.
+URL:https://www.alegriamusic.net
+STATUS:TENTATIVE
+BEGIN:VALARM
+TRIGGER:-PT1H
+ACTION:DISPLAY
+DESCRIPTION:The 1% Method Masterclass starts in 1 hour
+END:VALARM
+END:VEVENT
+END:VCALENDAR

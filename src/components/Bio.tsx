@@ -48,7 +48,7 @@ export default function Bio() {
 
             <div className="flex flex-wrap gap-4">
               <Link
-                href="/book"
+                href="/masterclass-live"
                 className="inline-block px-7 py-3 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm"
               >
                 {t("bio.bookLesson")}

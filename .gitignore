@@ -47,3 +47,8 @@ next-env.d.ts
 
 # Local temp files
 temp/
+
+# Handoff secrets
+victor-site-handoff/ENV-VALUES.txt
+victor-site-handoff/funnel/assets/
+victor-site-handoff/.DS_Store
