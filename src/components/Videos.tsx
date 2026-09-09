@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 const galleryPhotos = [
   "/images/victor-gallery1.jpg",
@@ -84,37 +83,6 @@ export default function Gallery() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Community CTA */}
-        <div className="max-w-2xl mx-auto px-6 mt-16 text-center">
-          <p
-            className="text-xs tracking-[0.3em] uppercase text-primary mb-4"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
-            Online Community
-          </p>
-          <h3
-            className="text-3xl md:text-4xl font-light text-foreground mb-6"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Global Brass <span className="italic">Collective</span>
-          </h3>
-          <p
-            className="text-sm text-muted-foreground leading-relaxed mb-8"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
-            Join Víctor&apos;s online community of over 100 musicians from around the world.
-          </p>
-          <Link
-            href="https://www.skool.com/timos-brass-circle-1123"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-8 py-4 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
-            Join the Community →
-          </Link>
         </div>
 
       </div>
