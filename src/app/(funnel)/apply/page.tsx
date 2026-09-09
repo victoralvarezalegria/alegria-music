@@ -132,19 +132,6 @@ var BOOKED_PAGE = "/booked";   /* cleanUrls: /booked.html 308s to /booked */
 var bookedMsg = document.getElementById('bookedMsg');
 var sent = false;
 
-/* Calendly also posts its rendered height as "calendly.page_height". Without
-   this the frame stays at the 760px set inline, so the calendar scrolls inside
-   its own box on some steps. Added on top of the handoff source, which never
-   had this listener. */
-window.addEventListener('message', function (e) {
-    if (e.origin !== 'https://calendly.com') return;
-    var d = e.data || {};
-    if (d.event !== 'calendly.page_height') return;
-    var h = d.payload && d.payload.height;
-    var frame = document.getElementById('calendly');
-    if (h && frame) frame.style.height = h;
-});
-
 window.addEventListener('message', function (e) {
     if (e.origin !== 'https://calendly.com') return;
     var d = e.data || {};
