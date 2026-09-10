@@ -54,10 +54,23 @@ export async function POST(request: Request) {
       const invRes = await fetch(inviteeUri, {
         headers: { Authorization: `Bearer ${CALENDLY_TOKEN}` },
       });
-      const inv = (await invRes.json())?.resource;
+      const invJson = await invRes.json().catch(() => null);
+      const inv = invJson?.resource;
       if (!invRes.ok || !inv?.email) {
-        console.error("book: calendly invitee lookup failed", invRes.status);
-        return Response.json({ ok: false, error: "calendly_lookup_failed" }, { status: 502 });
+        // 401/403 = CALENDLY_TOKEN is not a valid token for Víctor's Calendly
+        // account (the exact failure that lost every booking made on /apply
+        // between 2026-09-08 and 2026-09-10). 404 = the URI is not visible to
+        // that token (wrong account, or a made-up test URI). /api/health
+        // reports which one it is without a booking.
+        const error =
+          invRes.status === 401 || invRes.status === 403
+            ? "calendly_auth_failed"
+            : invRes.status === 404
+              ? "calendly_not_found"
+              : "calendly_lookup_failed";
+        console.error("book: calendly invitee lookup failed", invRes.status, error,
+          JSON.stringify(invJson).slice(0, 300));
+        return Response.json({ ok: false, error }, { status: 502 });
       }
       email = String(inv.email).trim().toLowerCase();
       firstName = clean(inv.first_name) || clean((inv.name || "").split(" ")[0]);

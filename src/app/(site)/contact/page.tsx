@@ -1,11 +1,47 @@
 "use client";
 
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+type SendStatus = "idle" | "sending" | "sent" | "error";
+
 export default function ContactPage() {
   const { t } = useLanguage();
+  const [status, setStatus] = useState<SendStatus>("idle");
+
+  // The form used to be action="mailto:", which opens the visitor's mail app
+  // (or does nothing on a phone without one) and never records the enquiry.
+  // Now it posts to /api/contact, which writes the contact to Víctor's
+  // ActiveCampaign with the "Website Contact" tag and the message as a note.
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    setStatus("sending");
+    try {
+      const r = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          subject: data.get("subject"),
+          message: data.get("message"),
+        }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.ok) {
+        form.reset();
+        setStatus("sent");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
 
   return (
     <>
@@ -84,12 +120,26 @@ export default function ContactPage() {
 
               {/* Right — form */}
               <div>
-                <form
-                  action="mailto:victoralvarezalegria@gmail.com"
-                  method="post"
-                  encType="text/plain"
-                  className="space-y-6"
-                >
+                {status === "sent" ? (
+                  <div
+                    className="bg-card border border-border rounded-sm px-6 py-10 text-center"
+                    role="status"
+                  >
+                    <p
+                      className="text-xl text-foreground mb-3"
+                      style={{ fontFamily: "var(--font-heading)" }}
+                    >
+                      {t("contact.sentTitle")}
+                    </p>
+                    <p
+                      className="text-sm text-muted-foreground"
+                      style={{ fontFamily: "var(--font-body)" }}
+                    >
+                      {t("contact.sentBody")}
+                    </p>
+                  </div>
+                ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
                       <label
@@ -173,12 +223,23 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="w-full py-4 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm"
+                    disabled={status === "sending"}
+                    className="w-full py-4 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm disabled:opacity-60"
                     style={{ fontFamily: "var(--font-body)" }}
                   >
-                    {t("contact.sendMessage")}
+                    {status === "sending" ? t("contact.sending") : t("contact.sendMessage")}
                   </button>
+                  {status === "error" && (
+                    <p
+                      className="text-sm text-primary"
+                      role="alert"
+                      style={{ fontFamily: "var(--font-body)" }}
+                    >
+                      {t("contact.sendError")}
+                    </p>
+                  )}
                 </form>
+                )}
               </div>
             </div>
           </div>

@@ -41,7 +41,7 @@ export default function Footer() {
     { href: "/", label: t("nav.home") },
     { href: "/biography", label: t("nav.biography") },
     { href: "/events", label: t("nav.events") },
-    { href: "/masterclass-live", label: t("nav.studyWithMe") },
+    { href: "/watch", label: t("nav.studyWithMe") },
     { href: "/contact", label: t("nav.contact") },
   ];
 

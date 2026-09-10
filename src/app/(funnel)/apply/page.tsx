@@ -37,7 +37,8 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: 60px; line-height: 
 .steps a:hover { text-decoration: underline; }
 
 .cal { max-width: 1000px; margin: 50px auto 0; border-radius: 8px; overflow: hidden; background: #fff; }
-.calendly-inline-widget { min-width: 320px; height: 760px; }
+.calendly-inline-widget { min-width: 320px; height: 760px; transition: height .25s ease; }
+.calendly-inline-widget iframe { display: block; border: 0; }
 .booked-msg { display: none; max-width: 640px; margin: 20px auto 0; padding: 16px 20px; border-radius: 6px; background: rgba(255,107,53,0.10); border: 1px solid rgba(255,107,53,0.5); color: #fff; font-size: 17px; line-height: 1.55; text-align: center; }
 .booked-msg.open { display: block; }
 .booked-msg a { color: var(--accent); }
@@ -131,6 +132,24 @@ var BOOK_ENDPOINT = "/api/book";
 var BOOKED_PAGE = "/booked";   /* cleanUrls: /booked.html 308s to /booked */
 var bookedMsg = document.getElementById('bookedMsg');
 var sent = false;
+
+/* Calendly posts "calendly.page_height" every time its content changes size
+   (month view, time list, form, confirmation). The frame follows it, so the
+   calendar never scrolls inside its own box. payload.height arrives as a
+   string like "1052px": parse it, bound it, and set BOTH the wrapper and the
+   iframe, or the wrapper grows while the iframe stays at the inline 760px. */
+window.addEventListener('message', function (e) {
+    if (e.origin !== 'https://calendly.com') return;
+    var d = e.data || {};
+    if (d.event !== 'calendly.page_height' || !d.payload || !d.payload.height) return;
+    var h = parseInt(d.payload.height, 10);
+    if (!(h > 300 && h < 6000)) return;
+    var box = document.getElementById('calendly');
+    if (!box) return;
+    box.style.height = (h + 4) + 'px';
+    var f = box.querySelector('iframe');
+    if (f) f.style.height = (h + 4) + 'px';
+});
 
 window.addEventListener('message', function (e) {
     if (e.origin !== 'https://calendly.com') return;

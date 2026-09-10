@@ -48,7 +48,7 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
-                href="/masterclass-live"
+                href="/watch"
                 className="px-8 py-4 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm"
               >
                 {t("home.bookLesson")}
