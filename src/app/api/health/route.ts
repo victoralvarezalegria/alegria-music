@@ -29,16 +29,40 @@ export async function GET() {
 
   const activecampaign = await checkActiveCampaign();
   const calendly = await checkCalendly();
+  const bookFallback = await checkBookFallback();
 
   const ok =
     env.AC_URL && env.AC_KEY && env.AC_LIST_ID && env.AC_ONDEMAND_LIST_ID &&
     env.AC_BOOKED_LIST_ID && env.AC_WAITLIST_LIST_ID && env.AC_WAITLIST_TAG_ID &&
-    activecampaign.ok && calendly.ok;
+    activecampaign.ok && (calendly.ok || bookFallback.ok);
 
   return Response.json(
-    { ok, env, activecampaign, calendly, checkedAt: new Date().toISOString() },
+    { ok, env, activecampaign, calendly, bookFallback, checkedAt: new Date().toISOString() },
     { status: ok ? 200 : 503, headers: { "Cache-Control": "no-store" } },
   );
+}
+
+// Proves the fallback's token WITHOUT writing anything: a made-up Calendly URI
+// must come back calendly_not_found (token accepted, URI unknown). Any auth
+// error there means the fallback would also lose the booking.
+async function checkBookFallback() {
+  const url = process.env.BOOK_FALLBACK_URL ?? "https://webinar-registration-steel.vercel.app/api/book";
+  if (!url) return { ok: false, error: "disabled" };
+  const zero = "00000000-0000-0000-0000-000000000000";
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventUri: `https://api.calendly.com/scheduled_events/${zero}`,
+        inviteeUri: `https://api.calendly.com/scheduled_events/${zero}/invitees/${zero}`,
+      }),
+    });
+    const j = await r.json().catch(() => null);
+    return { ok: j?.error === "calendly_not_found", url, response: j?.error ?? `http_${r.status}` };
+  } catch (e) {
+    return { ok: false, url, error: e instanceof Error ? e.message : "unexpected" };
+  }
 }
 
 async function checkActiveCampaign() {

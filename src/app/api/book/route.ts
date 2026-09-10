@@ -16,6 +16,13 @@ const AC_KEY = process.env.AC_KEY; // Settings > Developer > API Key
 const AC_BOOKED_LIST_ID = process.env.AC_BOOKED_LIST_ID; // numeric id: "Booked Call"
 const AC_BOOKED_TAG_ID = process.env.AC_BOOKED_TAG_ID; // optional numeric tag id
 const CALENDLY_TOKEN = process.env.CALENDLY_TOKEN; // Calendly > Integrations > API & webhooks
+// Same route on Timo's Vercel project, which holds a working copy of Víctor's
+// Calendly token and writes to the SAME ActiveCampaign list 8. Used only when
+// this deployment's own CALENDLY_TOKEN is missing or rejected (401/403), so a
+// bad env var here can never lose a booking again. Set BOOK_FALLBACK_URL="" to
+// disable.
+const BOOK_FALLBACK_URL =
+  process.env.BOOK_FALLBACK_URL ?? "https://webinar-registration-steel.vercel.app/api/book";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +55,8 @@ export async function POST(request: Request) {
     }
     if (!CALENDLY_TOKEN) {
       console.error("book: inviteeUri received but CALENDLY_TOKEN is not set");
+      const fb = await forwardToFallback({ eventUri, inviteeUri });
+      if (fb) return fb;
       return Response.json({ ok: false, error: "need_calendly_token" }, { status: 500 });
     }
     try {
@@ -70,6 +79,10 @@ export async function POST(request: Request) {
               : "calendly_lookup_failed";
         console.error("book: calendly invitee lookup failed", invRes.status, error,
           JSON.stringify(invJson).slice(0, 300));
+        if (error === "calendly_auth_failed") {
+          const fb = await forwardToFallback({ eventUri, inviteeUri });
+          if (fb) return fb;
+        }
         return Response.json({ ok: false, error }, { status: 502 });
       }
       email = String(inv.email).trim().toLowerCase();
@@ -200,6 +213,27 @@ export async function GET() {
     { ok: false, error: "method_not_allowed" },
     { status: 405, headers: { Allow: "POST" } },
   );
+}
+
+// Hands the booking to BOOK_FALLBACK_URL and relays its answer. Returns null
+// when no fallback is configured or it cannot be reached, so the caller falls
+// through to its own error.
+async function forwardToFallback(body: { eventUri: string; inviteeUri: string }) {
+  if (!BOOK_FALLBACK_URL) return null;
+  try {
+    const r = await fetch(BOOK_FALLBACK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json().catch(() => null);
+    if (!j) return null;
+    console.error("book: handled by fallback", BOOK_FALLBACK_URL, r.status, j.error || "ok");
+    return Response.json({ ...j, via: "fallback" }, { status: r.status });
+  } catch (e) {
+    console.error("book: fallback unreachable", e instanceof Error ? e.message : e);
+    return null;
+  }
 }
 
 function isCalendlyUri(u: string): boolean {
