@@ -40,7 +40,10 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: 60px; line-height: 
 .calendly-inline-widget { min-width: 320px; height: 760px; transition: height .25s ease; }
 .calendly-inline-widget iframe { display: block; border: 0; }
 .booked-msg { display: none; max-width: 640px; margin: 20px auto 0; padding: 16px 20px; border-radius: 6px; background: rgba(255,107,53,0.10); border: 1px solid rgba(255,107,53,0.5); color: #fff; font-size: 17px; line-height: 1.55; text-align: center; }
-.booked-msg.open { display: block; }
+/* Shown after Calendly reports the booking. Pinned to the viewport: Calendly's
+   confirmation view resizes the frame and the page ends up scrolled far down,
+   so an in-flow message under the calendar was never seen (Timo, 2026-09-10). */
+.booked-msg.open { display: block; position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); width: calc(100% - 32px); max-width: 640px; margin: 0; z-index: 9999; background: #212530; box-shadow: 0 16px 48px rgba(0,0,0,0.6); }
 .booked-msg a { color: var(--accent); }
 
 .notes { margin-top: 22px; font-size: 15px; line-height: 1.8; color: var(--muted); text-align: center; font-style: italic; }
@@ -160,7 +163,6 @@ window.addEventListener('message', function (e) {
     var eventUri = payload.event && payload.event.uri ? payload.event.uri : '';
     var inviteeUri = payload.invitee && payload.invitee.uri ? payload.invitee.uri : '';
     bookedMsg.classList.add('open');
-    bookedMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
     try { sessionStorage.setItem('va_booked', '1'); } catch (e2) {}
 
     var go = function () { window.location.href = BOOKED_PAGE; };
