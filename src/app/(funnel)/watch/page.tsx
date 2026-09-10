@@ -174,7 +174,7 @@ const bodyHtml = `<div class="topbar"></div>
         Unlock the high register. Win auditions. End stage fright.
         <span class="h1b">Without adding a single hour of practice.</span>
     </h1>
-    <a class="cta" href="#open-popup">YES! Watch The Free Masterclass Now!</a>
+    <a class="cta" href="#open-popup">YES! Watch The Masterclass Now!</a>
 </div>
 
 <div class="cols">
@@ -195,7 +195,7 @@ const bodyHtml = `<div class="topbar"></div>
         <div class="fire">&#128293; Watch it right now, or whenever you want. &#128293;</div>
 
         <div class="ctawrap">
-            <a class="cta" href="#open-popup">YES! Watch The Free Masterclass Now!</a>
+            <a class="cta" href="#open-popup">YES! Watch The Masterclass Now!</a>
             <div class="nocost">100% Free. Instant access. Start watching in the next 30 seconds.</div>
         </div>
     </div>
