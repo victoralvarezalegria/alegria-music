@@ -61,7 +61,7 @@ const bodyHtml = `<div class="topbar"></div>
         <div class="ph"><div class="play"></div><div class="ph-label">Replay is being uploaded</div></div>
     </div>
 
-    <a class="cta" href="/apply">Book Your 1% Method Strategy Session</a>
+    <a class="cta" href="/apply" data-t="masterclass-apply">Book Your 1% Method Strategy Session</a>
 
 </div>
 
@@ -91,6 +91,49 @@ if (VIDEO_EMBED) {
 }
 `;
 
+const registeredScript = `
+/* Registration conversion. Written SERVER-side by /api/t/registered, not by a
+   browser event, because "reached the viewing room after the form" is the
+   number an ad set gets optimised against and it must not depend on a fetch
+   finishing on a flaky phone. Fires once per opt-in: only when the sign-up
+   form on this visit parked va_lead in sessionStorage (so a returning lead
+   opening a replay link from an email is not counted as a new registration),
+   and never twice for the same lead. The email rides along from the form; if
+   it is missing, the server finds the person from the visitor id instead. */
+(function () {
+    var lead = null;
+    try { lead = JSON.parse(sessionStorage.getItem('va_lead') || 'null'); } catch (e) {}
+    if (!lead || !lead.email) return;
+    var done = '';
+    try { done = sessionStorage.getItem('va_reg_done') || ''; } catch (e) {}
+    if (done === lead.email) return;
+    try { sessionStorage.setItem('va_reg_done', lead.email); } catch (e) {}
+    var eventId = '';
+    try { eventId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ''; } catch (e) {}
+    var vid = lead.vid || '';
+    if (!vid) { try { vid = localStorage.getItem('tv') || ''; } catch (e) {} }
+
+    function post(v) {
+        try {
+            fetch('/api/t/registered', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    vid: v || vid || null,
+                    email: lead.email || null,
+                    firstName: lead.firstName || null,
+                    eventId: eventId || null
+                }),
+                keepalive: true
+            }).catch(function () {});
+        } catch (e) {}
+    }
+
+    if (window.__t && window.__t.vid) window.__t.vid().then(post, function () { post(''); });
+    else setTimeout(function () { post(''); }, 600);
+})();
+`;
+
 export default function Page() {
   return (
     <>
@@ -103,6 +146,10 @@ export default function Page() {
       <script
         id="body-0"
         dangerouslySetInnerHTML={{ __html: bodyScript0 }}
+      />
+      <script
+        id="body-registered"
+        dangerouslySetInnerHTML={{ __html: registeredScript }}
       />
     </>
   );

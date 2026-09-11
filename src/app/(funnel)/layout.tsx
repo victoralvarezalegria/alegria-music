@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AcSiteTracking from "@/components/AcSiteTracking";
+import FirstPartyTracking from "@/components/FirstPartyTracking";
 
 // A second root layout, for the funnel pages only.
 //
@@ -26,6 +27,7 @@ export default function FunnelLayout({
       <body>
         {children}
         <AcSiteTracking />
+        <FirstPartyTracking />
       </body>
     </html>
   );

@@ -174,7 +174,7 @@ const bodyHtml = `<div class="topbar"></div>
         Unlock the high register. Win auditions. End stage fright.
         <span class="h1b">Without adding a single hour of practice.</span>
     </h1>
-    <a class="cta" href="#open-popup">YES! Watch The Masterclass Now!</a>
+    <a class="cta" href="#open-popup" data-t="open-popup">YES! Watch The Masterclass Now!</a>
 </div>
 
 <div class="cols">
@@ -195,7 +195,7 @@ const bodyHtml = `<div class="topbar"></div>
         <div class="fire">&#128293; Watch it right now, or whenever you want. &#128293;</div>
 
         <div class="ctawrap">
-            <a class="cta" href="#open-popup">YES! Watch The Masterclass Now!</a>
+            <a class="cta" href="#open-popup" data-t="open-popup">YES! Watch The Masterclass Now!</a>
             <div class="nocost">100% Free. Instant access. Start watching in the next 30 seconds.</div>
         </div>
     </div>
@@ -221,6 +221,9 @@ const bodyHtml = `<div class="topbar"></div>
         <form id="regForm">
             <input type="text" name="firstname" placeholder="Your first name" required>
             <input type="email" name="email" placeholder="Your best email" required>
+            <!-- Visitor id, filled by /t.js. Hidden rather than read live at
+                 submit time so the redirect never waits on /api/t/init. -->
+            <input id="lf-vid" name="vid" type="hidden" value="">
             <button type="submit">WATCH NOW!</button>
         </form>
         <div class="formmsg" id="formMsg"></div>
@@ -257,6 +260,16 @@ form.addEventListener('submit', function (ev) {
     var email = form.email.value.trim();
     var firstName = form.firstname.value.trim();
 
+    /* Attribution. One id for this Lead, shared by the row /api/subscribe writes
+       and any server-side ad event later, so the conversion is never counted
+       twice. The visitor id comes from the hidden field t.js filled, with the
+       localStorage mirror as the fallback when t.js has not answered yet. */
+    var eventId = '';
+    try { eventId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ''; } catch (_) {}
+    var vidField = document.getElementById('lf-vid');
+    var vid = (vidField && vidField.value) || '';
+    if (!vid) { try { vid = localStorage.getItem('tv') || ''; } catch (_) {} }
+
     submitBtn.disabled = true;
     submitBtn.textContent = 'OPENING THE MASTERCLASS...';
     msg.style.display = 'none';
@@ -264,11 +277,14 @@ form.addEventListener('submit', function (ev) {
     fetch(REGISTRATION_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, firstName: firstName, source: REGISTRATION_SOURCE })
+        body: JSON.stringify({ email: email, firstName: firstName, source: REGISTRATION_SOURCE, vid: vid, eventId: eventId })
     })
     .then(function (r) { return r.json().catch(function () { return {}; }); })
     .then(function (data) {
         if (data && data.ok) {
+            /* Parked for the next page, which posts the registration conversion
+               (/api/t/registered) once the lead reaches the viewing room. */
+            try { sessionStorage.setItem('va_lead', JSON.stringify({ email: email, firstName: firstName, vid: vid })); } catch (_) {}
             window.location.href = THANK_YOU_PAGE;
             return;
         }
@@ -287,6 +303,21 @@ form.addEventListener('submit', function (ev) {
         submitBtn.textContent = 'WATCH NOW!';
     }
 });
+
+/* Park the visitor id in the hidden field as soon as t.js has one. Resolving it
+   here rather than at submit time keeps the redirect instant even on a cold
+   /api/t/init, and the localStorage fallback in the handler covers the case
+   where t.js has not answered yet. */
+(function fillVid(tries) {
+    if (window.__t && window.__t.vid) {
+        window.__t.vid().then(function (v) {
+            var f = document.getElementById('lf-vid');
+            if (f && v) f.value = v;
+        }).catch(function () {});
+        return;
+    }
+    if ((tries || 0) < 40) setTimeout(function () { fillVid((tries || 0) + 1); }, 100);
+})(0);
 `;
 
 export default function Page() {

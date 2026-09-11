@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import AcSiteTracking from "@/components/AcSiteTracking";
+import FirstPartyTracking from "@/components/FirstPartyTracking";
 import "../globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -56,6 +57,7 @@ export default function RootLayout({
           {children}
         </LanguageProvider>
         <AcSiteTracking />
+        <FirstPartyTracking />
       </body>
     </html>
   );

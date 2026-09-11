@@ -10,6 +10,16 @@
 // this route cannot learn who booked, and returns need_calendly_token.
 //
 // Keys live ONLY in Vercel env vars. Never inline them into a page.
+//
+// 2026-09-11: attribution. /apply appends the visitor id to the Calendly URL as
+// utm_content, and Calendly hands it straight back on the invitee resource
+// under tracking.utm_content. That is the only way to know WHICH visitor
+// booked: the Calendly iframe is a different origin, so the booking itself
+// carries no cookie of ours. Body vid is the fallback for the /booked path.
+// recordConversion is awaited after the AC legs and never changes the reply.
+
+import { recordConversion } from "@/lib/tracking/convert.js";
+import { isUuid } from "@/lib/tracking/identity.js";
 
 const AC_URL = process.env.AC_URL; // https://<account>.api-us1.com
 const AC_KEY = process.env.AC_KEY; // Settings > Developer > API Key
@@ -34,6 +44,8 @@ export async function POST(request: Request) {
     eventUri?: string;
     inviteeUri?: string;
     startTime?: string;
+    vid?: unknown;
+    eventId?: unknown;
   };
   try {
     body = await request.json();
@@ -47,6 +59,8 @@ export async function POST(request: Request) {
   const eventUri = clean(body.eventUri);
   const inviteeUri = clean(body.inviteeUri);
   let startTime = clean(body.startTime);
+  let vid = isUuid(body.vid) ? String(body.vid) : "";
+  const eventId = isUuid(body.eventId) ? String(body.eventId) : null;
 
   // Embed path: no email, only Calendly URIs. Look the invitee up.
   if (!email && inviteeUri) {
@@ -88,6 +102,9 @@ export async function POST(request: Request) {
       email = String(inv.email).trim().toLowerCase();
       firstName = clean(inv.first_name) || clean((inv.name || "").split(" ")[0]);
       lastName = clean(inv.last_name) || clean((inv.name || "").split(" ").slice(1).join(" "));
+      // The visitor id /apply planted in the Calendly link comes back here.
+      const tracked = inv.tracking && inv.tracking.utm_content ? String(inv.tracking.utm_content).trim() : "";
+      if (isUuid(tracked)) vid = tracked;
       if (eventUri && isCalendlyUri(eventUri)) {
         const evRes = await fetch(eventUri, {
           headers: { Authorization: `Bearer ${CALENDLY_TOKEN}` },
@@ -201,7 +218,35 @@ export async function POST(request: Request) {
       }
     }
 
-    return Response.json({ ok: true, contactId, tagged, firstName });
+    // 5) Attribution. Awaited, because the function is frozen the instant the
+    //    response is sent. The external id prefers the Calendly invitee URI; the
+    //    /booked fallback (no URI, just redirect params) gets a deterministic key
+    //    from the email and the slot, so the two paths firing for the same
+    //    booking collapse onto one row instead of counting the call twice.
+    const externalId = inviteeUri || (startTime ? "cal:" + email + "|" + startTime : null);
+    let attribution = "skipped";
+    try {
+      const at = await recordConversion({
+        vid,
+        email,
+        firstName,
+        lastName,
+        type: "booked_call",
+        source: "calendly",
+        externalId,
+        eventUuid: eventId,
+        occurredAt: startTime || null,
+        acContactId: String(contactId),
+        meta: { calendly_event: eventUri || null, calendly_invitee: inviteeUri || null },
+        req: request,
+      });
+      attribution = (at && at.status) || "skipped";
+    } catch (e) {
+      console.error("book: attribution failed", e instanceof Error ? e.message : e);
+      attribution = "error";
+    }
+
+    return Response.json({ ok: true, contactId, tagged, firstName, attribution });
   } catch (err) {
     console.error("book: unexpected", err);
     return Response.json({ ok: false, error: "unexpected" }, { status: 500 });

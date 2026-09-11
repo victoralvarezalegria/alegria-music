@@ -83,13 +83,17 @@ const bodyHtml = `<div class="topbar"></div>
     <p class="plain">Book your time today before we hit our member cap</p>
 
     <div class="steps">
-        <p><b>Step 1.</b> Watch Victor's famous masterclass (if you have not watched, <a href="/masterclass">click here for replay</a>)</p>
+        <p><b>Step 1.</b> Watch Victor's famous masterclass (if you have not watched, <a href="/masterclass" data-t="apply-replay">click here for replay</a>)</p>
         <p><b>Step 2.</b> Choose time for no cost strategy call</p>
     </div>
 
     <div class="cal" id="book">
+        <!-- data-url-base, NOT data-url, on purpose. widget.js auto-initialises any
+             .calendly-inline-widget that has data-url the moment it loads, before
+             the visitor id is known. The script below builds the final URL (with
+             utm_content=<visitor id>) and initialises the widget itself. -->
         <div class="calendly-inline-widget" id="calendly"
-             data-url="https://calendly.com/victoralvarezalegria/30min?hide_gdpr_banner=1"
+             data-url-base="https://calendly.com/victoralvarezalegria/30min?hide_gdpr_banner=1"
              style="min-width:320px;height:760px;"></div>
     </div>
 
@@ -135,6 +139,52 @@ var BOOK_ENDPOINT = "/api/book";
 var BOOKED_PAGE = "/booked";   /* cleanUrls: /booked.html 308s to /booked */
 var bookedMsg = document.getElementById('bookedMsg');
 var sent = false;
+var calBox = document.getElementById('calendly');
+
+/* Plant the visitor id in the Calendly URL. The Calendly iframe is a different
+   origin, so the booking itself carries none of our cookies: utm_content is the
+   only channel that survives the round trip, and Calendly hands it straight back
+   on the invitee resource, where /api/book reads it. Without this, every booked
+   call would arrive anonymous and no ad or link would ever get credit for it.
+   utm_source=va-funnel is there so these show up as ours inside Calendly. */
+var TRACK_VID = '';
+function readVid() {
+    var m = (' ' + document.cookie).match(/[; ]tv=([^;]*)/);
+    if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
+    try { return localStorage.getItem('tv') || ''; } catch (e) { return ''; }
+}
+function initCalendly(vid) {
+    TRACK_VID = vid || '';
+    var base = calBox.getAttribute('data-url-base') || '';
+    var url = base + (base.indexOf('?') === -1 ? '?' : '&') + 'utm_source=va-funnel' +
+              (TRACK_VID ? '&utm_content=' + encodeURIComponent(TRACK_VID) : '');
+    calBox.setAttribute('data-url', url);
+    /* widget.js may not have arrived yet. Poll for it rather than guess: it is
+       loaded async and there is no load event we can rely on across browsers. */
+    var tries = 0;
+    (function go() {
+        if (window.Calendly && window.Calendly.initInlineWidget) {
+            try { window.Calendly.initInlineWidget({ url: url, parentElement: calBox }); } catch (e) {}
+            return;
+        }
+        if (++tries < 100) setTimeout(go, 100);
+    })();
+}
+/* Resolve the id, but never let the calendar wait on it: a visitor who cannot
+   book is a worse outcome than a booking we cannot attribute. */
+(function () {
+    var done = false;
+    var fire = function (v) { if (done) return; done = true; initCalendly(v); };
+    setTimeout(function () { fire(readVid()); }, 1500);
+    if (window.__t && window.__t.vid) window.__t.vid().then(fire, function () { fire(readVid()); });
+    else {
+        var n = 0;
+        (function wait() {
+            if (window.__t && window.__t.vid) { window.__t.vid().then(fire, function () { fire(readVid()); }); return; }
+            if (++n < 15) setTimeout(wait, 100);
+        })();
+    }
+})();
 
 /* Calendly posts "calendly.page_height" every time its content changes size
    (month view, time list, form, confirmation). The frame follows it, so the
@@ -164,12 +214,17 @@ window.addEventListener('message', function (e) {
     var inviteeUri = payload.invitee && payload.invitee.uri ? payload.invitee.uri : '';
     bookedMsg.classList.add('open');
     try { sessionStorage.setItem('va_booked', '1'); } catch (e2) {}
+    /* One id for this booked call. Stored so /booked reuses it if its own
+       fallback post fires too, and the two collapse onto one conversion row. */
+    var eventId = '';
+    try { eventId = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ''; } catch (e7) {}
+    try { sessionStorage.setItem('va_booked_eid', eventId); } catch (e8) {}
 
     var go = function () { window.location.href = BOOKED_PAGE; };
     fetch(BOOK_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventUri: eventUri, inviteeUri: inviteeUri }),
+        body: JSON.stringify({ eventUri: eventUri, inviteeUri: inviteeUri, vid: TRACK_VID || readVid(), eventId: eventId }),
         keepalive: true
     }).then(function (r) { return r.json().catch(function () { return {}; }); })
       .then(function (data) {

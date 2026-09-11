@@ -218,6 +218,15 @@ const bodyScript0 = `
     if (!alreadyPosted && q.email) {
         var full = (q.name || '').trim().split(' ');
         try { sessionStorage.setItem('va_booked', '1'); } catch (e) {}
+        /* Attribution: the visitor id (cookie, then the localStorage mirror) and
+           the event id /apply minted, if it did, so the two posts share one row. */
+        var bkVid = '';
+        var bkm = (' ' + document.cookie).match(/[; ]tv=([^;]*)/);
+        if (bkm) { try { bkVid = decodeURIComponent(bkm[1]); } catch (e7) { bkVid = bkm[1]; } }
+        if (!bkVid) { try { bkVid = localStorage.getItem('tv') || ''; } catch (e8) {} }
+        var bkEid = '';
+        try { bkEid = sessionStorage.getItem('va_booked_eid') || ''; } catch (e9) {}
+        if (!bkEid) { try { bkEid = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ''; } catch (e10) {} }
         fetch('/api/book', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -225,7 +234,9 @@ const bodyScript0 = `
                 email: q.email,
                 firstName: full[0] || '',
                 lastName: full.slice(1).join(' '),
-                startTime: q.start || ''
+                startTime: q.start || '',
+                vid: bkVid || null,
+                eventId: bkEid || null
             }),
             keepalive: true
         }).catch(function () {});
