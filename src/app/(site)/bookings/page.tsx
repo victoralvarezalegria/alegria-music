@@ -113,11 +113,9 @@ export default function BookingsPage() {
     {
       month: "November",
       entries: [
-        { date: "5 – 7", type: "MASTERCLASS", event: "Masterclass · Pacific Brass Festival", location: "Mazatlán · Mexico" },
-        { date: "8", type: "CONCERT", event: "Recital · Pacific Brass Festival", location: "Mazatlán · Mexico" },
-        { date: "9", type: "CONCERT", event: "Concert with Peter Steiner", location: "Mazatlán · Mexico" },
+        { date: "5 – 9", type: "FESTIVAL", event: "Pacific Brass Festival", location: "Mazatlán · Mexico" },
         { date: "11", type: "MASTERCLASS", event: "Masterclass", location: "Mexico City · Mexico" },
-        { date: "15", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Campeche", location: "Campeche · Mexico" },
+        { date: "14", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Campeche", location: "Campeche · Mexico" },
         { date: "17 – 18", type: "RECORDING", event: "Recording Sessions", location: "Cancún · Mexico" },
         { date: "20", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Oaxaca", location: "Oaxaca · Mexico" },
         { date: "21 – 22", type: "MASTERCLASS", event: "Masterclass", location: "Puebla · Mexico" },
@@ -126,7 +124,7 @@ export default function BookingsPage() {
     {
       month: "December",
       entries: [
-        { date: "1 – 31", type: "ENGAGEMENT", event: "To be announced", location: "Asia" },
+        { date: "1 – 31", type: "ORCHESTRA", event: "Principal Trombone · New Position", location: "Asia" },
       ],
     },
   ];
