@@ -110,6 +110,25 @@ export default function BookingsPage() {
         { date: "23", type: "MASTERCLASS", event: "Masterclass · Seoul University of the Arts", location: "Seoul · South Korea" },
       ],
     },
+    {
+      month: "November",
+      entries: [
+        { date: "5 – 7", type: "MASTERCLASS", event: "Masterclass · Pacific Brass Festival", location: "Mazatlán · Mexico" },
+        { date: "8", type: "CONCERT", event: "Recital · Pacific Brass Festival", location: "Mazatlán · Mexico" },
+        { date: "9", type: "CONCERT", event: "Concert with Peter Steiner", location: "Mazatlán · Mexico" },
+        { date: "11", type: "MASTERCLASS", event: "Masterclass", location: "Mexico City · Mexico" },
+        { date: "15", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Campeche", location: "Campeche · Mexico" },
+        { date: "17 – 18", type: "RECORDING", event: "Recording Sessions", location: "Cancún · Mexico" },
+        { date: "20", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Oaxaca", location: "Oaxaca · Mexico" },
+        { date: "21 – 22", type: "MASTERCLASS", event: "Masterclass", location: "Puebla · Mexico" },
+      ],
+    },
+    {
+      month: "December",
+      entries: [
+        { date: "1 – 31", type: "ENGAGEMENT", event: "To be announced", location: "Asia" },
+      ],
+    },
   ];
 
   return (
