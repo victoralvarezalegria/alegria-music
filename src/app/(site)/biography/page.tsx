@@ -457,51 +457,6 @@ export default function BiographyPage() {
           </div>
         </section>
 
-        {/* ─── GLOBAL BRASS COLLECTIVE ─────────────────────────── */}
-        <section className="py-24 bg-card">
-          <div className="max-w-7xl mx-auto px-6 md:px-10">
-            <div className="grid md:grid-cols-2 gap-16 items-center">
-              <div className="relative overflow-hidden rounded-sm bg-background">
-                <Image
-                  src="/images/victor-community.png"
-                  alt="Global Brass Collective – Study with Víctor"
-                  width={700}
-                  height={420}
-                  className="w-full h-auto object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-              <div>
-                <p className="text-xs tracking-[0.3em] uppercase text-primary mb-4" style={{ fontFamily: "var(--font-body)" }}>
-                  {t("biography.communityLabel")}
-                </p>
-                <h2 className="text-4xl md:text-5xl font-light text-foreground mb-4 leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                  {t("biography.communityTitle").split(" ").slice(0, -1).join(" ")}{" "}
-                  <span className="italic">{t("biography.communityTitle").split(" ").slice(-1)[0]}</span>
-                </h2>
-                <div className="section-divider mb-8" />
-                <p className="text-base text-muted-foreground leading-relaxed mb-6" style={{ fontFamily: "var(--font-body)" }}>
-                  {t("biography.communityBody")}
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    href="/watch"
-                    className="px-8 py-4 bg-primary text-primary-foreground text-xs tracking-widest uppercase font-medium hover:bg-primary/90 transition-colors rounded-sm"
-                  >
-                    {t("biography.studyWithMe")}
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="px-8 py-4 border border-border text-muted-foreground text-xs tracking-widest uppercase font-medium hover:border-foreground/50 hover:text-foreground transition-colors rounded-sm"
-                  >
-                    {t("biography.askQuestion")}
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
       </main>
       <Footer />
     </>
