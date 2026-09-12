@@ -37,8 +37,8 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: 60px; line-height: 
 .steps a:hover { text-decoration: underline; }
 
 .cal { max-width: 1000px; margin: 50px auto 0; border-radius: 8px; overflow: hidden; background: #fff; }
-.calendly-inline-widget { min-width: 320px; height: 760px; transition: height .25s ease; }
-.calendly-inline-widget iframe { display: block; border: 0; }
+#calendly { min-width: 320px; height: 760px; transition: height .25s ease; }
+#calendly iframe { display: block; border: 0; }
 .booked-msg { display: none; max-width: 640px; margin: 20px auto 0; padding: 16px 20px; border-radius: 6px; background: rgba(255,107,53,0.10); border: 1px solid rgba(255,107,53,0.5); color: #fff; font-size: 17px; line-height: 1.55; text-align: center; }
 /* Shown after Calendly reports the booking. Pinned to the viewport: Calendly's
    confirmation view resizes the frame and the page ends up scrolled far down,
@@ -66,7 +66,7 @@ h1 { font-family: var(--serif); font-weight: 600; font-size: 60px; line-height: 
     .red, .plain, .steps, .points p, .cap { font-size: 17px; }
     .steps { margin-top: 36px; }
     .cal { margin-top: 30px; }
-    .calendly-inline-widget { height: 1000px; }
+    #calendly { height: 1000px; }
     .ready { font-size: 27px; }
 }`;
 
@@ -88,11 +88,14 @@ const bodyHtml = `<div class="topbar"></div>
     </div>
 
     <div class="cal" id="book">
-        <!-- data-url-base, NOT data-url, on purpose. widget.js auto-initialises any
-             .calendly-inline-widget that has data-url the moment it loads, before
-             the visitor id is known. The script below builds the final URL (with
-             utm_content=<visitor id>) and initialises the widget itself. -->
-        <div class="calendly-inline-widget" id="calendly"
+        <!-- No calendly-inline-widget class and no data-url here, both on purpose.
+             widget.js scans for .calendly-inline-widget on load and stamps every
+             match with data-processed, so a box carrying that class was marked
+             done before the visitor id was known and the iframe never got built:
+             the calendar showed up as an empty white area. The script below waits
+             for widget.js, builds the final URL (with utm_content=<visitor id>)
+             and calls initInlineWidget itself, which adds Calendly's own class. -->
+        <div id="calendly"
              data-url-base="https://calendly.com/victoralvarezalegria/30min?hide_gdpr_banner=1"
              style="min-width:320px;height:760px;"></div>
     </div>
@@ -158,7 +161,10 @@ function initCalendly(vid) {
     var base = calBox.getAttribute('data-url-base') || '';
     var url = base + (base.indexOf('?') === -1 ? '?' : '&') + 'utm_source=va-funnel' +
               (TRACK_VID ? '&utm_content=' + encodeURIComponent(TRACK_VID) : '');
-    calBox.setAttribute('data-url', url);
+    /* Deliberately NOT setting data-url here: widget.js scans the DOM for
+       .calendly-inline-widget[data-url] and initialises it itself, which raced
+       with the initInlineWidget call below and left the box marked
+       data-processed with no iframe in it, so the calendar never appeared. */
     /* widget.js may not have arrived yet. Poll for it rather than guess: it is
        loaded async and there is no load event we can rely on across browsers. */
     var tries = 0;
