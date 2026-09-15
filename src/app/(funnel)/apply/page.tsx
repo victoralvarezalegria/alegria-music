@@ -96,7 +96,7 @@ const bodyHtml = `<div class="topbar"></div>
              for widget.js, builds the final URL (with utm_content=<visitor id>)
              and calls initInlineWidget itself, which adds Calendly's own class. -->
         <div id="calendly"
-             data-url-base="https://calendly.com/victoralvarezalegria/30min?hide_gdpr_banner=1"
+             data-url-base="https://calendly.com/victoralvarezalegria/60min?hide_gdpr_banner=1"
              style="min-width:320px;height:760px;"></div>
     </div>
 
