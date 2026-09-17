@@ -20,7 +20,11 @@ export function readConsent(): Consent {
     if (v === "all" || v === "essential") return v;
   } catch {}
   const m = document.cookie.match(/(?:^|; )va_consent=(all|essential)/);
-  return m ? (m[1] as Consent) : null;
+  if (m) return m[1] as Consent;
+  // No stored choice. Outside the opt-in countries (middleware sets va_geo=free) nothing needs
+  // asking: trackers may load and no banner is shown. In an opt-in country, or unknown, ask.
+  const geo = document.cookie.match(/(?:^|; )va_geo=(free|consent)/);
+  return geo && geo[1] === "free" ? "all" : null;
 }
 
 export function writeConsent(v: Exclude<Consent, null>) {
