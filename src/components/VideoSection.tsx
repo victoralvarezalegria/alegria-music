@@ -4,6 +4,9 @@ export default function VideoSection() {
       {/* YouTube video background */}
       <div className="absolute inset-0 w-full h-full">
         <iframe
+          title="Background performance video"
+          aria-hidden="true"
+          tabIndex={-1}
           src="https://www.youtube-nocookie.com/embed/l4FJULCFhbU?autoplay=1&mute=1&loop=1&playlist=l4FJULCFhbU&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&cc_load_policy=0"
           allow="autoplay; fullscreen"
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"

@@ -23,6 +23,7 @@ export default function Gallery() {
       {/* Background video — drop /public/videos/gallery-bg.mp4 to activate */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <video
+          aria-hidden="true"
           autoPlay
           muted
           loop

@@ -1,3 +1,4 @@
+import CookieConsentWithLang from "@/components/CookieConsentWithLang";
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Space_Grotesk } from "next/font/google";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -34,12 +35,18 @@ export const metadata: Metadata = {
     "online trombone lessons",
     "Víctor Álvarez Alegría",
   ],
+  metadataBase: new URL("https://www.alegriamusic.net"),
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Víctor Álvarez Alegría | International Trombone Soloist",
     description:
       "Principal Trombone of the Helsinki Philharmonic Orchestra. International soloist & online educator.",
     type: "website",
+    url: "https://www.alegriamusic.net/",
+    siteName: "Víctor Álvarez Alegría",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Víctor Álvarez Alegría, trombone soloist" }],
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
@@ -55,6 +62,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <LanguageProvider>
           {children}
+          <CookieConsentWithLang />
         </LanguageProvider>
         <AcSiteTracking />
         <FirstPartyTracking />

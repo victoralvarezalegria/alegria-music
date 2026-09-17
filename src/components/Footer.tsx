@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { openConsentSettings } from "@/lib/consent";
 
 const socials = [
   {
@@ -35,7 +36,7 @@ const socials = [
 ];
 
 export default function Footer() {
-  const { t } = useLanguage();
+  const { t, lang: language } = useLanguage();
 
   const footerLinks = [
     { href: "/", label: t("nav.home") },
@@ -159,10 +160,20 @@ export default function Footer() {
             © {new Date().getFullYear()} Víctor Álvarez Alegría. {t("footer.rights")}
           </p>
           <p
-            className="text-xs text-muted-foreground"
+            className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-1"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Alegría Global LLC · Helsinki, Finland
+            <span>Alegría Global LLC · Helsinki, Finland</span>
+            <Link href="/privacy" className="underline hover:text-foreground transition-colors">
+              {language === "es" ? "Política de privacidad" : "Privacy policy"}
+            </Link>
+            <button
+              type="button"
+              onClick={openConsentSettings}
+              className="underline hover:text-foreground transition-colors"
+            >
+              {language === "es" ? "Configuración de cookies" : "Cookie settings"}
+            </button>
           </p>
         </div>
       </div>

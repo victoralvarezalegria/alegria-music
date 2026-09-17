@@ -1,4 +1,6 @@
+"use client";
 import Script from "next/script";
+import { useConsent } from "@/hooks/useConsent";
 
 // First-party attribution tracker, /public/t.js. Sets the tv visitor cookie
 // through /api/t/init and posts page views, video milestones and CTA clicks to
@@ -11,6 +13,12 @@ import Script from "next/script";
 // Loaded after the page is interactive, after ActiveCampaign's site tracking,
 // so neither ever delays first paint. Every entry point inside t.js is
 // wrapped: a tracking failure can never break a page.
+//
+// 2026-09-17: the visitor cookie is not strictly necessary for the site to work,
+// so under ePrivacy it loads only after the visitor accepts cookies
+// (src/lib/consent.ts). Global Privacy Control = never.
 export default function FirstPartyTracking() {
+  const consent = useConsent();
+  if (consent !== "all") return null;
   return <Script id="first-party-tracking" src="/t.js" strategy="afterInteractive" />;
 }

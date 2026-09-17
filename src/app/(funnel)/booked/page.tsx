@@ -119,12 +119,13 @@ const bodyHtml = `<div class="topbar"></div>
 <div class="wrap">
 
     <!-- ===== HERO ===== -->
-    <!-- Copy mirrors Harrisson's call-booked page line for line. Only the names changed. -->
+    <!-- Copy mirrors the standard call-booked page line for line. Only the names changed. -->
     <header class="hero">
         <!-- Victor's pre-call welcome video. Source: Timo's Drive share 2026-09-08, transcoded 1920x1080 30fps. -->
         <div class="hero-video">
             <video controls playsinline preload="metadata" poster="/assets/victor-precall-poster.jpg">
                 <source src="/assets/victor-precall.mp4" type="video/mp4">
+                <track kind="captions" srclang="en" label="English" src="/assets/victor-precall.vtt" default>
             </video>
         </div>
         <h1 id="h1">Congrats, Your Call is Booked... Nice!</h1>

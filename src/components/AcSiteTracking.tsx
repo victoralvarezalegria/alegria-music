@@ -1,4 +1,6 @@
+"use client";
 import Script from "next/script";
+import { useConsent } from "@/hooks/useConsent";
 
 // ActiveCampaign site tracking. This is the snippet ActiveCampaign shows under
 // Settings > Tracking, so the account's "Site Tracking" screen reports the
@@ -12,9 +14,14 @@ import Script from "next/script";
 // (victoralvarezalegria44473). Domains whitelisted there: alegriamusic.net and
 // www.alegriamusic.net. Loaded after the page is interactive so it never
 // delays the first paint.
+//
+// 2026-09-17: loads only after the visitor accepts cookies (src/lib/consent.ts);
+// a browser sending Global Privacy Control never loads it.
 const AC_TRACKING_ACCOUNT = "479067337";
 
 export default function AcSiteTracking() {
+  const consent = useConsent();
+  if (consent !== "all") return null;
   return (
     <Script id="ac-site-tracking" strategy="afterInteractive">
       {`(function(e,t,o,n,p,r,i){e.visitorGlobalObjectAlias=n;e[e.visitorGlobalObjectAlias]=e[e.visitorGlobalObjectAlias]||function(){(e[e.visitorGlobalObjectAlias].q=e[e.visitorGlobalObjectAlias].q||[]).push(arguments)};e[e.visitorGlobalObjectAlias].l=(new Date).getTime();r=t.createElement("script");r.src=o;r.async=true;i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)})(window,document,"https://diffuser-cdn.app-us1.com/diffuser/diffuser.js","vgo");

@@ -1,3 +1,4 @@
+import CookieConsent from "@/components/CookieConsent";
 import type { Metadata } from "next";
 import AcSiteTracking from "@/components/AcSiteTracking";
 import FirstPartyTracking from "@/components/FirstPartyTracking";
@@ -15,6 +16,12 @@ import FirstPartyTracking from "@/components/FirstPartyTracking";
 
 export const metadata: Metadata = {
   title: "Victor Alegria",
+  metadataBase: new URL("https://www.alegriamusic.net"),
+  openGraph: {
+    type: "website",
+    siteName: "Víctor Álvarez Alegría",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Víctor Álvarez Alegría, trombone soloist" }],
+  },
 };
 
 export default function FunnelLayout({
@@ -26,6 +33,7 @@ export default function FunnelLayout({
     <html lang="en">
       <body>
         {children}
+        <CookieConsent />
         <AcSiteTracking />
         <FirstPartyTracking />
       </body>
