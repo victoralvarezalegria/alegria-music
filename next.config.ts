@@ -15,6 +15,17 @@ const nextConfig: NextConfig = {
       { source: "/registered", destination: "/masterclass", permanent: false },
     ];
   },
+  async rewrites() {
+    return {
+      // /waitlist is the 1% Musician Accelerator waitlist page (2026-10-06). It is a
+      // finished static page (public/waitlist/index.html + public/waitlist/assets/),
+      // served exactly as built, outside the site and funnel layouts. Its form posts
+      // to /api/waitlist. beforeFiles so the rewrite wins over any page route.
+      beforeFiles: [{ source: "/waitlist", destination: "/waitlist/index.html" }],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
   async headers() {
     return [
       {
@@ -50,6 +61,20 @@ const nextConfig: NextConfig = {
             ].join("; "),
           },
         ],
+      },
+      {
+        // The waitlist page is static HTML: never let a browser or the edge keep an old copy.
+        source: "/waitlist",
+        headers: [{ key: "Cache-Control", value: "no-store, max-age=0" }],
+      },
+      {
+        source: "/waitlist/index.html",
+        headers: [{ key: "Cache-Control", value: "no-store, max-age=0" }],
+      },
+      {
+        // Every file name under /waitlist/assets carries a content hash, so a year is safe.
+        source: "/waitlist/assets/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       {
         // The calendar file on /registered. Without these it opens as text in
