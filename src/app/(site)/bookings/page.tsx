@@ -107,7 +107,8 @@ export default function BookingsPage() {
     {
       month: "October",
       entries: [
-        { date: "23", type: "MASTERCLASS", event: "Masterclass · Seoul University of the Arts", location: "Seoul · South Korea" },
+        { date: "7 – 22", type: "TOUR", event: "Japan & South Korea Tour · Helsinki Philharmonic", location: "Japan & South Korea", cancelled: true },
+        { date: "23", type: "MASTERCLASS", event: "Masterclass · Seoul University of the Arts", location: "Seoul · South Korea", cancelled: true },
       ],
     },
     {
@@ -118,13 +119,22 @@ export default function BookingsPage() {
         { date: "14", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Campeche", location: "Campeche · Mexico" },
         { date: "17 – 18", type: "RECORDING", event: "Recording Sessions", location: "Cancún · Mexico" },
         { date: "20", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Oaxaca", location: "Oaxaca · Mexico" },
-        { date: "21 – 22", type: "MASTERCLASS", event: "Masterclass", location: "Puebla · Mexico" },
+        { date: "21 – 23", type: "MASTERCLASS", event: "Masterclass", location: "Puebla · Mexico" },
+        { date: "24", type: "MASTERCLASS", event: "Masterclass", location: "Toluca · Mexico" },
+        { date: "27 – 30", type: "ORCHESTRA", event: "Principal Trombone · New Position", location: "Bangkok · Thailand" },
       ],
     },
     {
       month: "December",
       entries: [
-        { date: "1 – 31", type: "ORCHESTRA", event: "Principal Trombone · New Position", location: "Asia" },
+        { date: "1 – 31", type: "ORCHESTRA", event: "Principal Trombone · New Position", location: "Bangkok · Thailand" },
+      ],
+    },
+    {
+      month: "January",
+      year: "2027",
+      entries: [
+        { date: "", type: "TBA", event: "More information coming soon", location: "" },
       ],
     },
   ];
@@ -274,6 +284,7 @@ export default function BookingsPage() {
                 <div key={group.month}>
                   <p className="text-[10px] tracking-[0.3em] uppercase text-primary mb-3 pb-3 border-b border-border" style={{ fontFamily: "var(--font-body)" }}>
                     {t(`events.months.${group.month}`)}
+                    {"year" in group && group.year ? ` ${group.year}` : ""}
                   </p>
                   <div className="space-y-3">
                     {group.entries.map((entry) => (
@@ -291,7 +302,12 @@ export default function BookingsPage() {
                         >
                           {entry.type}
                         </span>
-                        <span className="text-sm text-foreground" style={{ fontFamily: "var(--font-body)" }}>{entry.event}</span>
+                        <span className={`text-sm ${"cancelled" in entry && entry.cancelled ? "text-muted-foreground line-through" : "text-foreground"}`} style={{ fontFamily: "var(--font-body)" }}>
+                          {entry.event}
+                          {"cancelled" in entry && entry.cancelled && (
+                            <span className="ml-2 inline-block text-[10px] tracking-widest uppercase text-red-500 no-underline">Cancelled</span>
+                          )}
+                        </span>
                         <span className="text-xs text-muted-foreground text-right" style={{ fontFamily: "var(--font-body)" }}>{entry.location}</span>
                       </div>
                     ))}
