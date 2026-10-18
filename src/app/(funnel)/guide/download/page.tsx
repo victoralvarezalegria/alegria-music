@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { goldPdfCss, goldPdfHtml } from "@/components/guideGoldPdf";
 
 // Where /guide sends people after the email goes through (2026-10-18).
 // The PDF lives at /downloads/the-1-percent-audition-guide.pdf.
@@ -44,12 +45,7 @@ h1 {
 .dl:hover { background: var(--accent-dark); transform: translateY(-2px); }
 .open { display: block; margin-top: 14px; font-size: 14px; color: var(--muted); }
 .open a { color: var(--muted); }
-.preview { margin: 44px auto 0; max-width: 520px; }
-.preview img {
-    width: 100%; display: block; border-radius: 4px; box-shadow: 0 24px 60px rgba(0,0,0,0.55);
-    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
-    mask-image: linear-gradient(to bottom, #000 70%, transparent);
-}
+.preview { margin: 20px auto 0; max-width: 360px; }
 .next {
     margin: 40px auto 0; padding: 26px 24px; max-width: 520px;
     background: var(--bg-raised); border: 1px solid var(--hairline); border-radius: 8px;
@@ -63,7 +59,8 @@ h1 {
     .wrap { padding-top: 40px; }
     h1 { font-size: 40px; }
     .dl { font-size: 16px; padding: 17px 28px; }
-}`;
+    .preview { max-width: 280px; }
+}` + goldPdfCss;
 
 const bodyHtml = `<div class="topbar"></div>
 <div class="wrap">
@@ -74,7 +71,7 @@ const bodyHtml = `<div class="topbar"></div>
     <span class="open">Button not working? <a href="/downloads/the-1-percent-audition-guide.pdf" target="_blank" rel="noopener">Open the PDF here</a>.</span>
 
     <div class="preview">
-        <img src="/downloads/audition-guide-preview.jpg" alt="First page of The 1% Audition Guide" width="900" height="789">
+        ${goldPdfHtml}
     </div>
 
     <div class="next">

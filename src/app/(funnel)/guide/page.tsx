@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { goldPdfCss, goldPdfHtml } from "@/components/guideGoldPdf";
 
 // Lead magnet sign-up (2026-10-18). One email field, then /guide/download.
 // Contact goes to AC list "Lead Magnet" + tag "Lead Magnet" via /api/lead-magnet,
@@ -26,7 +27,12 @@ body {
 }
 .topbar { height: 4px; background: var(--accent); }
 
-.hero { max-width: 760px; margin: 0 auto; padding: 52px 24px 0; text-align: center; }
+.hero {
+    max-width: 1120px; margin: 0 auto; padding: 56px 24px 0;
+    display: flex; align-items: center; gap: 56px;
+}
+.hero-art { flex: 0 0 44%; }
+.hero-copy { flex: 1; text-align: center; }
 .eyebrow {
     color: var(--accent); font-weight: 500; font-size: 13px; letter-spacing: 0.18em;
     text-transform: uppercase; margin-bottom: 18px;
@@ -69,18 +75,7 @@ h1 {
 .fine { font-size: 12px; color: var(--muted); margin-top: 12px; text-align: center; }
 .formmsg { display: none; font-weight: 500; color: var(--accent); margin-top: 12px; font-size: 14px; text-align: center; }
 
-.inside {
-    max-width: 1000px; margin: 72px auto 0; padding: 0 24px;
-    display: flex; gap: 48px; align-items: center;
-}
-.inside .preview { flex: 0 0 46%; }
-.inside .preview img {
-    width: 100%; display: block; border-radius: 4px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.55);
-    -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
-    mask-image: linear-gradient(to bottom, #000 78%, transparent);
-}
-.inside .list { flex: 1; }
+.inside { max-width: 640px; margin: 72px auto 0; padding: 0 24px; }
 .inside h2 {
     color: var(--accent); font-weight: 500; font-size: 13px; letter-spacing: 0.18em;
     text-transform: uppercase; margin-bottom: 22px;
@@ -100,18 +95,22 @@ h1 {
 .footer a { color: var(--accent); text-decoration: none; font-size: 13px; }
 
 @media (max-width: 860px) {
-    .hero { padding-top: 36px; }
+    .hero { padding-top: 32px; flex-direction: column; gap: 0; }
+    .hero-art { flex: none; width: 250px; margin: 6px auto -6px; }
+    .hero-copy { display: contents; }
+    .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > .sub { order: -1; text-align: center; }
     h1 { font-size: 42px; }
     .sub { font-size: 22px; }
     .eyebrow { font-size: 11px; letter-spacing: 0.16em; }
     .card { padding: 24px 20px 20px; margin-top: 28px; }
-    .inside { flex-direction: column; gap: 32px; margin-top: 56px; }
-    .inside .preview { flex: none; width: 100%; }
-}`;
+    .inside { margin-top: 56px; }
+}` + goldPdfCss;
 
 const bodyHtml = `<div class="topbar"></div>
 
 <div class="hero">
+    <div class="hero-art">${goldPdfHtml}</div>
+    <div class="hero-copy">
     <div class="eyebrow">Free guide for serious brass players</div>
     <h1>The 1% Audition Guide</h1>
     <p class="sub">The system that took me from 19 lost auditions to winning orchestra positions.</p>
@@ -126,12 +125,10 @@ const bodyHtml = `<div class="topbar"></div>
         <div class="formmsg" id="formMsg" role="alert"></div>
         <p class="fine">Free. No spam, ever. Unsubscribe any time.</p>
     </div>
+    </div>
 </div>
 
 <div class="inside">
-    <div class="preview">
-        <img src="/downloads/audition-guide-preview.jpg" alt="First page of The 1% Audition Guide by Victor Alegria" width="900" height="789">
-    </div>
     <div class="list">
         <h2>What is inside</h2>
         <ol>
