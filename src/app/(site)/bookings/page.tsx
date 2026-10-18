@@ -109,6 +109,7 @@ export default function BookingsPage() {
       entries: [
         { date: "7 – 22", type: "TOUR", event: "Japan & South Korea Tour · Helsinki Philharmonic", location: "Japan & South Korea", cancelled: true },
         { date: "23", type: "MASTERCLASS", event: "Masterclass · Seoul University of the Arts", location: "Seoul · South Korea", cancelled: true },
+        { date: "18 Oct – 2 Nov", type: "ENGAGEMENT", event: "Engagement", location: "Santander · Spain" },
       ],
     },
     {
@@ -121,13 +122,13 @@ export default function BookingsPage() {
         { date: "20", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Oaxaca", location: "Oaxaca · Mexico" },
         { date: "21 – 23", type: "MASTERCLASS", event: "Masterclass", location: "Puebla · Mexico" },
         { date: "24", type: "MASTERCLASS", event: "Masterclass", location: "Toluca · Mexico" },
-        { date: "27 – 30", type: "ORCHESTRA", event: "Principal Trombone · New Position", location: "Bangkok · Thailand" },
+        { date: "27 – 30", type: "ENGAGEMENT", event: "Engagement", location: "Bangkok · Thailand" },
       ],
     },
     {
       month: "December",
       entries: [
-        { date: "1 – 31", type: "ORCHESTRA", event: "Principal Trombone · New Position", location: "Bangkok · Thailand" },
+        { date: "1 – 31", type: "ENGAGEMENT", event: "Engagement", location: "Bangkok · Thailand" },
       ],
     },
     {
