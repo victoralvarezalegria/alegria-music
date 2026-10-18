@@ -56,7 +56,8 @@ h1 {
     display: block; font-size: 13px; font-weight: 500; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
 }
-.card input[type=email] {
+.card .lbl2 { margin-top: 16px; }
+.card input[type=email], .card input[type=text] {
     width: 100%; padding: 16px; font-size: 17px; font-family: inherit;
     border: 1px solid var(--hairline); border-radius: 5px;
     background: #12151b; color: var(--ink);
@@ -117,7 +118,9 @@ const bodyHtml = `<div class="topbar"></div>
 
     <div class="card">
         <form id="lmForm" novalidate>
-            <label for="lm-email">Email to send the stuff to</label>
+            <label for="lm-name">Your first name</label>
+            <input id="lm-name" type="text" name="firstname" placeholder="First name" autocomplete="given-name" maxlength="80" required>
+            <label for="lm-email" class="lbl2">Email to send the stuff to</label>
             <input id="lm-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
             <input id="lf-vid" name="vid" type="hidden" value="">
             <button type="submit">Get the guide</button>
@@ -160,6 +163,8 @@ var btn = form.querySelector('button[type=submit]');
 form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     var email = form.email.value.trim();
+    var firstName = form.firstname.value.trim();
+    if (!firstName) { return fail('Please add your first name.'); }
     if (!/^[^\\s@]+@[^\\s@.]+(\\.[^\\s@.]+)*\\.[A-Za-z]{2,}$/.test(email)) {
         return fail('That email does not look right. Try again?');
     }
@@ -175,13 +180,15 @@ form.addEventListener('submit', function (ev) {
     fetch('/api/lead-magnet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, vid: vid, eventId: eventId })
+        body: JSON.stringify({ email: email, firstName: firstName, vid: vid, eventId: eventId })
     })
     .then(function (r) { return r.json().catch(function () { return {}; }); })
     .then(function (data) {
         if (data && data.ok) { window.location.href = '/guide/download'; return; }
         fail(data && data.error === 'invalid_email'
             ? 'That email does not look right. Try again?'
+            : data && data.error === 'missing_name'
+            ? 'Please add your first name.'
             : 'Something went wrong. Please try again.');
     })
     .catch(function () { fail('Could not reach the server. Check your connection and try again.'); });

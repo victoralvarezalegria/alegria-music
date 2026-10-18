@@ -1,5 +1,5 @@
-// POST /api/lead-magnet   { email, vid?, eventId? }
-// The /guide sign-up: one email field, then the visitor lands on /guide/download.
+// POST /api/lead-magnet   { firstName, email, vid?, eventId? }
+// The /guide sign-up: first name + email, then the visitor lands on /guide/download.
 //
 // Puts the contact on Victor's ActiveCampaign list "Lead Magnet" and tags them
 // "Lead Magnet" (tag 7), so his nurture automations can start from either.
@@ -39,7 +39,7 @@ async function findListId(headers: Record<string, string>): Promise<number | nul
 }
 
 export async function POST(request: Request) {
-  let body: { email?: string; vid?: unknown; eventId?: unknown };
+  let body: { email?: string; firstName?: string; vid?: unknown; eventId?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -47,11 +47,15 @@ export async function POST(request: Request) {
   }
 
   const email = (body.email || "").trim().toLowerCase();
+  const firstName = typeof body.firstName === "string" ? body.firstName.trim().slice(0, 80) : "";
   const vid = String(body.vid == null ? "" : body.vid).trim();
   const eventId = String(body.eventId == null ? "" : body.eventId).trim();
 
   if (!isValidEmail(email)) {
     return Response.json({ ok: false, error: "invalid_email" }, { status: 400 });
+  }
+  if (!firstName) {
+    return Response.json({ ok: false, error: "missing_name" }, { status: 400 });
   }
   if (!AC_URL || !AC_KEY) {
     console.error("lead-magnet: missing AC env vars");
@@ -65,7 +69,7 @@ export async function POST(request: Request) {
   const attribution = recordConversion({
     vid,
     email,
-    firstName: "",
+    firstName,
     type: "lead",
     source: "form",
     eventUuid: eventId,
@@ -86,7 +90,7 @@ export async function POST(request: Request) {
     const syncRes = await fetch(`${AC_URL}/api/3/contact/sync`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ contact: { email } }),
+      body: JSON.stringify({ contact: { email, firstName } }),
     });
     const syncJson = await syncRes.json();
     const contactId = syncJson?.contact?.id;
