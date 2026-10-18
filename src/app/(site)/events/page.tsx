@@ -240,9 +240,7 @@ const upcomingProjects: ProjectCard[] = [
   { label: "Watches & Wonders Geneva", sub: "Geneva · Apr 7–21", img: "/images/project-geneva.png" },
   { label: "iBrass Congress", sub: "Bétera, Valencia · Apr 24–26", img: "/images/project-ibrass.png" },
   { label: "Colombia Tour 2026", sub: "Medellín · Cali · May 5–24", img: "/images/project-colombia.png" },
-  { label: "Hong Kong Lower Brass Centre", sub: "Hong Kong · May 28–29", img: "/images/project-hongkong.png" },
   { label: "Masterclass Italy", sub: "Povoletto · Jun 5–7", img: "/images/project-italy.png" },
-  { label: "UAE National Orchestra", sub: "Abu Dhabi & Dubai · Jun 15–30", img: "/images/project-uaeno.png" },
   { label: "Żywieckie Suwakowanie", sub: "Poland · Jul 20–26", img: "/images/project-poland.png" },
   { label: "Trombonanza Festival", sub: "Santa Fe, Argentina · Aug 1–8", img: "/images/project-argentina.png" },
 ];
