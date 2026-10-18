@@ -76,7 +76,30 @@ h1 {
 .fine { font-size: 12px; color: var(--muted); margin-top: 12px; text-align: center; }
 .formmsg { display: none; font-weight: 500; color: var(--accent); margin-top: 12px; font-size: 14px; text-align: center; }
 
-.inside { max-width: 640px; margin: 72px auto 0; padding: 0 24px; }
+.from {
+    max-width: 1000px; margin: 88px auto 0; padding: 0 24px;
+    display: flex; gap: 56px; align-items: center;
+}
+.from .photo { flex: 0 0 38%; }
+.from .photo img {
+    width: 100%; height: auto; display: block; border-radius: 6px; aspect-ratio: 4 / 5; object-fit: cover;
+    object-position: 50% 40%; box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+    border: 1px solid var(--hairline);
+}
+.from .words { flex: 1; }
+.from .kicker {
+    color: var(--accent); font-weight: 500; font-size: 13px; letter-spacing: 0.18em;
+    text-transform: uppercase; margin-bottom: 18px;
+}
+.from blockquote {
+    font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 600;
+    font-size: 34px; line-height: 1.2; color: #fff;
+    border-left: 3px solid #d9a441; padding-left: 20px; margin-bottom: 22px;
+}
+.from p.story { font-size: 17px; line-height: 1.65; color: var(--ink); }
+.from p.story b { color: #fff; }
+.from .creds { margin-top: 18px; font-size: 13px; color: var(--muted); line-height: 1.6; letter-spacing: 0.02em; }
+.inside { max-width: 640px; margin: 80px auto 0; padding: 0 24px; }
 .inside h2 {
     color: var(--accent); font-weight: 500; font-size: 13px; letter-spacing: 0.18em;
     text-transform: uppercase; margin-bottom: 22px;
@@ -104,6 +127,9 @@ h1 {
     .sub { font-size: 22px; }
     .eyebrow { font-size: 11px; letter-spacing: 0.16em; }
     .card { padding: 24px 20px 20px; margin-top: 28px; }
+    .from { flex-direction: column; gap: 28px; margin-top: 64px; }
+    .from .photo { flex: none; width: 100%; max-width: 360px; }
+    .from blockquote { font-size: 27px; }
     .inside { margin-top: 56px; }
 }` + goldPdfCss;
 
@@ -128,6 +154,18 @@ const bodyHtml = `<div class="topbar"></div>
         <div class="formmsg" id="formMsg" role="alert"></div>
         <p class="fine">Free. No spam, ever. Unsubscribe any time.</p>
     </div>
+    </div>
+</div>
+
+<div class="from">
+    <div class="photo">
+        <img src="/images/guide-victor-helsinki.jpg" alt="Victor Alegria with his trombone on the stage of the Helsinki Music Centre" width="675" height="900" loading="lazy">
+    </div>
+    <div class="words">
+        <div class="kicker">From Victor</div>
+        <blockquote>&ldquo;In every audition I won, I was never the best player in the room. I was the best prepared.&rdquo;</blockquote>
+        <p class="story">I lost 19 auditions, many in the final round, while practising more hours than anyone around me. What changed was not my talent or my hours. It was <b>how</b> I prepared. This is the preparation I now use with my students, from conservatory entrance exams to principal positions.</p>
+        <div class="creds">V&iacute;ctor &Aacute;lvarez Alegr&iacute;a &middot; Principal Trombone, Helsinki Philharmonic &middot; Karajan Academy, Berlin Philharmonic</div>
     </div>
 </div>
 
