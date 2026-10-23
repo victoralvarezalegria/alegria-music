@@ -12,7 +12,14 @@
 //
 // The API key lives ONLY in Vercel env vars. Never inline it into a page.
 
+//
+// 2026-10-23: same source leg as /api/subscribe (resolveSource -> AC FIRST_*/
+// LAST_* fields + cc_conversions.meta.source; tv cookie fallback for visitors
+// who never accepted the consent banner).
+
 import { recordConversion } from "@/lib/tracking/convert.js";
+import { resolveSource, sourceMeta } from "@/lib/tracking/source.js";
+import { writeSourceToAc } from "@/lib/tracking/ac-source.js";
 
 const AC_URL = process.env.AC_URL; // https://<account>.api-us1.com
 const AC_KEY = process.env.AC_KEY; // Settings > Developer > API Key
@@ -39,7 +46,7 @@ async function findListId(headers: Record<string, string>): Promise<number | nul
 }
 
 export async function POST(request: Request) {
-  let body: { email?: string; firstName?: string; vid?: unknown; eventId?: unknown };
+  let body: { email?: string; firstName?: string; vid?: unknown; eventId?: unknown; qs?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -66,16 +73,21 @@ export async function POST(request: Request) {
 
   // Same attribution leg as /api/subscribe, run in parallel with AC and
   // awaited before replying (Vercel freezes the function once it responds).
-  const attribution = recordConversion({
-    vid,
+  const sourceP = resolveSource({ request, vid, pageQs: typeof body.qs === "string" ? body.qs : "" }).catch(() => null);
+  const attribution = sourceP.then((src) => recordConversion({
+    vid: (src && src.vid) || vid,
     email,
     firstName,
     type: "lead",
     source: "form",
     eventUuid: eventId,
-    meta: { list: "lead-magnet", magnet: "audition-guide" },
+    meta: { list: "lead-magnet", magnet: "audition-guide", source: sourceMeta(src) },
     req: request,
-  });
+  }));
+  let acSourceP: Promise<string> = Promise.resolve("skipped");
+  const acSourceStatus = async () => {
+    try { return await acSourceP; } catch { return "error"; }
+  };
   const attributionStatus = async () => {
     try {
       const at = await attribution;
@@ -99,6 +111,10 @@ export async function POST(request: Request) {
       await attributionStatus();
       return Response.json({ ok: false, error: "contact_sync_failed" }, { status: 502 });
     }
+
+    acSourceP = sourceP.then((src) =>
+      writeSourceToAc({ acUrl: AC_URL, apiKey: AC_KEY, contactId, source: src }).then((r) => r.status),
+    );
 
     // Tag and list run side by side. Either one landing keeps the lead.
     const [tagged, listId] = await Promise.all([
@@ -128,14 +144,14 @@ export async function POST(request: Request) {
       console.error(`lead-magnet: AC list "${LIST_NAME}" not found; contact tagged only`);
     }
 
-    const attributionResult = await attributionStatus();
+    const [attributionResult, acSource] = await Promise.all([attributionStatus(), acSourceStatus()]);
     if (!tagged && !listed) {
       return Response.json({ ok: false, error: "subscribe_failed", contactId }, { status: 502 });
     }
-    return Response.json({ ok: true, contactId, tagged, listed, list: listId, attribution: attributionResult });
+    return Response.json({ ok: true, contactId, tagged, listed, list: listId, attribution: attributionResult, acSource });
   } catch (err) {
     console.error("lead-magnet: unexpected", err);
-    await attributionStatus();
+    await Promise.all([attributionStatus(), acSourceStatus()]);
     return Response.json({ ok: false, error: "unexpected" }, { status: 500 });
   }
 }

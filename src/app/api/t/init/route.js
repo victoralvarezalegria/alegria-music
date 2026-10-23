@@ -64,7 +64,9 @@ export async function POST(request) {
     if (!r.ok) console.error('t/init: visitor upsert failed', r.error, r.message);
   }
 
-  return json({ ok: true, vid }, 200, { 'Set-Cookie': setCookies });
+  // The cookie is still issued without the DB (the visitor id is useful the
+  // moment tracking is switched on), but the reply says tracking is off.
+  return json({ ok: true, vid, tracking: sbReady() }, 200, { 'Set-Cookie': setCookies });
 }
 
 function firstParam() {

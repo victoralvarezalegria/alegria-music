@@ -38,7 +38,10 @@ export async function POST(request) {
   const type = TYPES.includes(b.type) ? b.type : '';
   if (!vid || !eventUuid || !type) return json({ ok: false, error: 'bad_request' }, 400);
 
-  if (!sbReady()) return empty(204);
+  // Fail loud (2026-10-23): a 204 here hid six weeks of zero rows. 503 shows up
+  // red in the browser's network panel and in Vercel's request log; sbReady()
+  // has already written the one-per-cold-start error naming the missing vars.
+  if (!sbReady()) return json({ ok: false, error: 'tracking_not_configured' }, 503);
 
   const ua = userAgentOf(request);
   const isBot = isBotUa(ua);

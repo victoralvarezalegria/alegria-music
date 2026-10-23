@@ -21,7 +21,18 @@
 // the reply: a sign-up is confirmed by ActiveCampaign, not by us managing to
 // write an attribution row.
 
+//
+// 2026-10-23: source into ActiveCampaign + consent fallback. resolveSource reads
+// the visitor's tagged sessions, the tl_/tc_ cookies /go/<slug> set at click
+// time, and the page's own ?utm_/tl= (body.qs). The visitor id falls back to the
+// tv cookie /go set, so an EU visitor who never accepted the banner (t.js never
+// loaded, empty vid field) is still joined to the click. The source goes to the
+// FIRST_*/LAST_* custom fields in AC (writeSourceToAc; missing fields skipped)
+// and into cc_conversions.meta.source. Neither ever changes the reply.
+
 import { recordConversion } from "@/lib/tracking/convert.js";
+import { resolveSource, sourceMeta } from "@/lib/tracking/source.js";
+import { writeSourceToAc } from "@/lib/tracking/ac-source.js";
 
 const AC_URL = process.env.AC_URL; // https://<account>.api-us1.com
 const AC_KEY = process.env.AC_KEY; // Settings > Developer > API Key
@@ -34,7 +45,7 @@ const AC_ONDEMAND_TAG_ID = process.env.AC_ONDEMAND_TAG_ID; // "Automated Masterc
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  let body: { email?: string; firstName?: string; source?: string; vid?: unknown; eventId?: unknown };
+  let body: { email?: string; firstName?: string; source?: string; vid?: unknown; eventId?: unknown; qs?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -70,16 +81,21 @@ export async function POST(request: Request) {
 
   // The attribution leg starts now and is collected right before each reply,
   // so it costs no extra wall-clock time on top of the AC round trips.
-  const attribution = recordConversion({
-    vid,
+  const sourceP = resolveSource({ request, vid, pageQs: typeof body.qs === "string" ? body.qs : "" }).catch(() => null);
+  const attribution = sourceP.then((src) => recordConversion({
+    vid: (src && src.vid) || vid,
     email,
     firstName,
     type: "lead",
     source: "form",
     eventUuid: eventId,
-    meta: { list: onDemand ? "ondemand" : "live" },
+    meta: { list: onDemand ? "ondemand" : "live", source: sourceMeta(src) },
     req: request,
-  });
+  }));
+  let acSourceP: Promise<string> = Promise.resolve("skipped");
+  const acSourceStatus = async () => {
+    try { return await acSourceP; } catch { return "error"; }
+  };
   const attributionStatus = async () => {
     try {
       const at = await attribution;
@@ -107,6 +123,11 @@ export async function POST(request: Request) {
       return Response.json({ ok: false, error: "contact_sync_failed" }, { status: 502 });
     }
 
+    // Source fields run alongside the list + tag calls.
+    acSourceP = sourceP.then((src) =>
+      writeSourceToAc({ acUrl: AC_URL, apiKey: AC_KEY, contactId, source: src }).then((r) => r.status),
+    );
+
     // 2) Subscribe to the list. status 1 = subscribed.
     const listRes = await fetch(`${AC_URL}/api/3/contactLists`, {
       method: "POST",
@@ -120,7 +141,7 @@ export async function POST(request: Request) {
       const txt = await listRes.text();
       console.error("subscribe: contactLists failed", listRes.status, txt.slice(0, 500));
       // The contact exists, so report partial success rather than losing the lead.
-      await attributionStatus();
+      await Promise.all([attributionStatus(), acSourceStatus()]);
       return Response.json(
         { ok: false, error: "list_subscribe_failed", contactId },
         { status: 502 },
@@ -146,11 +167,11 @@ export async function POST(request: Request) {
       }
     }
 
-    const attributionResult = await attributionStatus();
-    return Response.json({ ok: true, contactId, tagged, list: Number(listId), attribution: attributionResult });
+    const [attributionResult, acSource] = await Promise.all([attributionStatus(), acSourceStatus()]);
+    return Response.json({ ok: true, contactId, tagged, list: Number(listId), attribution: attributionResult, acSource });
   } catch (err) {
     console.error("subscribe: unexpected", err);
-    await attributionStatus();
+    await Promise.all([attributionStatus(), acSourceStatus()]);
     return Response.json({ ok: false, error: "unexpected" }, { status: 500 });
   }
 }

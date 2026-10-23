@@ -277,7 +277,9 @@ form.addEventListener('submit', function (ev) {
     fetch(REGISTRATION_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, firstName: firstName, source: REGISTRATION_SOURCE, vid: vid, eventId: eventId })
+        /* qs: this page's own ?utm_...&tl=&tc=, so the server knows the link even
+           when the consent banner kept t.js (and its cookies) from loading. */
+        body: JSON.stringify({ email: email, firstName: firstName, source: REGISTRATION_SOURCE, vid: vid, eventId: eventId, qs: location.search.slice(0, 1000) })
     })
     .then(function (r) { return r.json().catch(function () { return {}; }); })
     .then(function (data) {

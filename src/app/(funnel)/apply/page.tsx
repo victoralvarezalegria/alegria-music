@@ -156,11 +156,31 @@ function readVid() {
     if (m) { try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; } }
     try { return localStorage.getItem('tv') || ''; } catch (e) { return ''; }
 }
+/* Link source (2026-10-23). /go/<slug> set tl_first / tl_last (link slug) and
+   tc_first / tc_last (click id) as first-party cookies at click time, which
+   survive the consent banner. They ride to Calendly as utm_term (last link)
+   and utm_campaign (first link), each "<slug>.<click id>", and come back on
+   the invitee resource for /api/book. Calendly passes only the five utm_*
+   params through, 255 characters each; these are at most 69. */
+function readCookie(n) {
+    var m = (' ' + document.cookie).match(new RegExp('[; ]' + n + '=([^;]*)'));
+    if (!m) return '';
+    try { return decodeURIComponent(m[1]); } catch (e) { return m[1]; }
+}
+function linkToken(which) {
+    var slug = readCookie('tl_' + which);
+    if (!/^[a-z0-9][a-z0-9-]{1,48}$/.test(slug)) return '';
+    var click = readCookie('tc_' + which);
+    return /^[0-9]{1,18}$/.test(click) ? slug + '.' + click : slug;
+}
 function initCalendly(vid) {
     TRACK_VID = vid || '';
     var base = calBox.getAttribute('data-url-base') || '';
+    var lastTok = linkToken('last'), firstTok = linkToken('first');
     var url = base + (base.indexOf('?') === -1 ? '?' : '&') + 'utm_source=va-funnel' +
-              (TRACK_VID ? '&utm_content=' + encodeURIComponent(TRACK_VID) : '');
+              (TRACK_VID ? '&utm_content=' + encodeURIComponent(TRACK_VID) : '') +
+              (lastTok ? '&utm_term=' + encodeURIComponent(lastTok) : '') +
+              (firstTok ? '&utm_campaign=' + encodeURIComponent(firstTok) : '');
     /* Deliberately NOT setting data-url here: widget.js scans the DOM for
        .calendly-inline-widget[data-url] and initialises it itself, which raced
        with the initInlineWidget call below and left the box marked

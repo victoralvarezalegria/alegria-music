@@ -13,8 +13,35 @@
 const URL_BASE = () => (process.env.CC_SUPABASE_URL || '').replace(/\/+$/, '');
 const KEY = () => process.env.CC_SUPABASE_SERVICE_KEY || '';
 
+// The four env vars the attribution chain needs on Victor's Vercel. The first
+// two make every write work; the two secrets gate the sale and report routes.
+export const TRACKING_ENV = ['CC_SUPABASE_URL', 'CC_SUPABASE_SERVICE_KEY', 'CC_SALE_SECRET', 'CC_REPORT_SECRET'];
+
+// { ok, missing } for /api/health. Names only, never values.
+export function trackingEnvStatus() {
+  const missing = TRACKING_ENV.filter((k) => !process.env[k]);
+  return { ok: missing.length === 0, missing };
+}
+
+// FAIL LOUD (2026-10-23). For six weeks these two vars were missing on the live
+// site and every write was skipped without one line in the logs: 0 rows, ever,
+// and nobody knew. Now the first time any route asks, and the answer is no, the
+// function log says so in words, once per cold start (not once per request, so
+// it stays readable), and /api/health reports tracking.ok=false.
+let warnedMissing = false;
+
 export function sbReady() {
-  return Boolean(URL_BASE() && KEY());
+  const ok = Boolean(URL_BASE() && KEY());
+  if (!ok && !warnedMissing) {
+    warnedMissing = true;
+    const missing = ['CC_SUPABASE_URL', 'CC_SUPABASE_SERVICE_KEY'].filter((k) => !process.env[k]);
+    console.error(
+      '[tracking] DISABLED: missing env ' + missing.join(', ') +
+      '. No click, visit, lead, booking or sale is being recorded in the cc_ tables. ' +
+      'Set them on the Vercel project and redeploy. /api/health shows tracking.missing.'
+    );
+  }
+  return ok;
 }
 
 function headers(extra) {

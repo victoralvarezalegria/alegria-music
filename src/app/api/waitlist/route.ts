@@ -7,6 +7,13 @@
 //
 // The API key lives ONLY in Vercel env vars. Never inline it into a page.
 
+// 2026-10-23: source into ActiveCampaign. The waitlist page is static HTML, so
+// the source comes from the server side only: the tl_/tc_ cookies /go set, the
+// visitor's tagged sessions (tv cookie), and the page URL in the Referer. It
+// fills the FIRST_*/LAST_* AC fields that exist and never fails the sign-up.
+import { resolveSource } from "@/lib/tracking/source.js";
+import { writeSourceToAc } from "@/lib/tracking/ac-source.js";
+
 const AC_URL = process.env.AC_URL; // https://<account>.api-us1.com
 const AC_KEY = process.env.AC_KEY; // Settings > Developer > API Key
 const AC_WAITLIST_LIST_ID = process.env.AC_WAITLIST_LIST_ID; // numeric id: "waitlist"
@@ -97,13 +104,23 @@ export async function POST(request: Request) {
         contactTag: { contact: Number(contactId), tag: Number(AC_WAITLIST_TAG_ID) },
       }),
     });
+    // Source fields: after the tag, so the reply logic above is unchanged.
+    let acSource = "skipped";
+    try {
+      const src = await resolveSource({ request });
+      acSource = (await writeSourceToAc({ acUrl: AC_URL, apiKey: AC_KEY, contactId, source: src })).status;
+    } catch (e) {
+      console.error("waitlist: source failed", e instanceof Error ? e.message : e);
+      acSource = "error";
+    }
+
     if (!tagRes.ok) {
       const txt = await tagRes.text();
       console.error("waitlist: contactTags failed", tagRes.status, txt.slice(0, 300));
-      return Response.json({ ok: false, error: "tag_failed", contactId }, { status: 502 });
+      return Response.json({ ok: false, error: "tag_failed", contactId, acSource }, { status: 502 });
     }
 
-    return Response.json({ ok: true, contactId, tagged: true });
+    return Response.json({ ok: true, contactId, tagged: true, acSource });
   } catch (err) {
     console.error("waitlist: unexpected", err);
     return Response.json({ ok: false, error: "unexpected" }, { status: 500 });

@@ -16,11 +16,24 @@
 //
 // 302, not 301: a permanent redirect gets cached by the browser and the click
 // row stops being written. Cache-Control no-store for the same reason.
+//
+// 2026-10-23 (attribution finish):
+//   - tl_first / tl_last (slug) and tc_first / tc_last (the cc_link_clicks id,
+//     our click id) are set as first-party cookies on THIS response, 90 days.
+//     The EU consent banner can stop t.js from loading on /watch, but it cannot
+//     un-set a cookie the redirect already wrote, so the opt-in and booking
+//     routes still know which link sent the person. tl_first is never replaced.
+//   - the destination also carries tc=<click id> so the landing page has it.
+//   - fail loud: when the tracking DB is not configured or not answering, the
+//     link no longer dumps people on the home page. It sends them to the
+//     funnel (GO_FALLBACK_URL, default /watch) with tl=<slug>, still sets the
+//     cookies, and says X-Tracking: off. An unknown or paused slug still goes home.
 
-import { insert, upsert, selectOne, sbReady } from '@/lib/tracking/sb.js';
+import { insert, upsert, select, sbReady } from '@/lib/tracking/sb.js';
 import { isUuid } from '@/lib/tracking/identity.js';
 import { isBotUa } from '@/lib/tracking/bot.js';
 import { readCookies, headerOf, geoOf, userAgentOf, clientIp, isIp } from '@/lib/tracking/http.js';
+import { goCookies } from '@/lib/tracking/source.js';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +41,9 @@ const HOME = 'https://www.alegriamusic.net/';
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{1,48}$/;
 const TWO_YEARS = 63072000;
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+// Where a link goes when the tracking DB cannot say. All live links point at
+// /watch (audit 2026-10-23), so that is the safe default.
+const FALLBACK = () => process.env.GO_FALLBACK_URL || 'https://www.alegriamusic.net/watch';
 
 export async function GET(request, ctx) {
   const params = ctx && ctx.params ? await ctx.params : {};
@@ -38,12 +54,20 @@ export async function GET(request, ctx) {
     'X-Robots-Tag': 'noindex, nofollow',
   });
 
-  if (!SLUG_RE.test(slug) || !sbReady()) return redirect(HOME, headers);
+  if (!SLUG_RE.test(slug)) return redirect(HOME, headers);
 
-  const link = await selectOne(
+  const cookies = readCookies(request);
+  if (!sbReady()) return fallback(slug, cookies, headers, 'not_configured');
+
+  const found = await select(
     'cc_links',
     'slug=eq.' + encodeURIComponent(slug) + '&active=is.true&select=id,slug,destination,utm_source,utm_medium,utm_campaign,utm_content,utm_term&limit=1'
   );
+  if (!found.ok) {
+    console.error('go: cc_links read failed, sending to fallback', found.status, found.error, found.message);
+    return fallback(slug, cookies, headers, 'db_error');
+  }
+  const link = Array.isArray(found.data) ? found.data[0] : null;
   if (!link || !link.destination) return redirect(HOME, headers);
 
   let dest;
@@ -57,7 +81,6 @@ export async function GET(request, ctx) {
 
   // Cookie first, then mint. The same header string /api/t/init sets, so the
   // landing page's t.js finds a valid cookie and never calls init for a new one.
-  const cookies = readCookies(request);
   let vid = isUuid(cookies.tv) ? cookies.tv : '';
   if (!vid) {
     vid = crypto.randomUUID();
@@ -68,6 +91,7 @@ export async function GET(request, ctx) {
   const isBot = isBotUa(ua);
   const ip = clientIp(request) || '';
   const now = new Date().toISOString();
+  let clickId = '';
 
   try {
     // Visitor row first so the click can carry the id; the FK on sessions and
@@ -87,12 +111,28 @@ export async function GET(request, ctx) {
       ts: now,
     };
     if (isIp(ip)) click.ip = ip;
-    const r = await insert('cc_link_clicks', click, { returning: 'minimal' });
+    // returning=representation for the id: that row id IS the click id that
+    // rides along in tc_* cookies, ?tc= and the Calendly link.
+    const r = await insert('cc_link_clicks', click, { returning: 'representation' });
     if (!r.ok) console.error('go: click insert failed', r.error, r.message);
+    else if (Array.isArray(r.data) && r.data[0] && r.data[0].id != null) clickId = String(r.data[0].id);
   } catch (e) {
     console.error('go: unexpected', e && e.message);
   }
 
+  if (clickId) dest.searchParams.set('tc', clickId);
+  for (const c of goCookies(cookies, slug, clickId)) headers.append('Set-Cookie', c);
+  return redirect(dest.toString(), headers);
+}
+
+// Tracking is off or the DB did not answer: still land the person on the
+// funnel with the slug, and keep the slug in first-party cookies.
+function fallback(slug, cookies, headers, why) {
+  let dest;
+  try { dest = new URL(FALLBACK()); } catch { dest = new URL('https://www.alegriamusic.net/watch'); }
+  dest.searchParams.set('tl', slug);
+  for (const c of goCookies(cookies, slug, '')) headers.append('Set-Cookie', c);
+  headers.set('X-Tracking', 'off; ' + why);
   return redirect(dest.toString(), headers);
 }
 

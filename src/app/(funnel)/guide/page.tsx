@@ -218,7 +218,8 @@ form.addEventListener('submit', function (ev) {
     fetch('/api/lead-magnet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, firstName: firstName, vid: vid, eventId: eventId })
+        /* qs: the page's own ?utm_...&tl=, read by the server as link source. */
+        body: JSON.stringify({ email: email, firstName: firstName, vid: vid, eventId: eventId, qs: location.search.slice(0, 1000) })
     })
     .then(function (r) { return r.json().catch(function () { return {}; }); })
     .then(function (data) {

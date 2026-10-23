@@ -6,6 +6,17 @@
 // because CALENDLY_TOKEN was set to something Calendly rejects, and nothing on
 // the site could show that without a real booking.
 
+//
+// 2026-10-23: tracking block. { ok, missing: [CC_SUPABASE_URL, ...], db } where
+// db is a read-only probe of cc_links with the service key. tracking.ok=false
+// makes the whole health check fail (503): the attribution chain recorded zero
+// rows for six weeks because these vars were missing and nothing said so.
+// acSourceFields lists which ActiveCampaign source fields exist (informational,
+// not part of ok: a missing field only means that value is skipped).
+
+import { trackingEnvStatus, select, sbReady } from "@/lib/tracking/sb.js";
+import { sourceFieldStatus } from "@/lib/tracking/ac-source.js";
+
 export const dynamic = "force-dynamic";
 
 const ENV_VARS = [
@@ -30,14 +41,16 @@ export async function GET() {
   const activecampaign = await checkActiveCampaign();
   const calendly = await checkCalendly();
   const bookFallback = await checkBookFallback();
+  const tracking = await checkTracking();
+  const acSourceFields = await sourceFieldStatus(process.env.AC_URL, process.env.AC_KEY);
 
   const ok =
     env.AC_URL && env.AC_KEY && env.AC_LIST_ID && env.AC_ONDEMAND_LIST_ID &&
     env.AC_BOOKED_LIST_ID && env.AC_WAITLIST_LIST_ID && env.AC_WAITLIST_TAG_ID &&
-    activecampaign.ok && (calendly.ok || bookFallback.ok);
+    activecampaign.ok && (calendly.ok || bookFallback.ok) && tracking.ok;
 
   return Response.json(
-    { ok, env, activecampaign, calendly, bookFallback, checkedAt: new Date().toISOString() },
+    { ok, env, tracking, activecampaign, acSourceFields, calendly, bookFallback, checkedAt: new Date().toISOString() },
     { status: ok ? 200 : 503, headers: { "Cache-Control": "no-store" } },
   );
 }
@@ -63,6 +76,21 @@ async function checkBookFallback() {
   } catch (e) {
     return { ok: false, url, error: e instanceof Error ? e.message : "unexpected" };
   }
+}
+
+// Env names only, never values. The DB probe is a read of one cc_links id.
+async function checkTracking() {
+  const { ok: envOk, missing } = trackingEnvStatus() as { ok: boolean; missing: string[] };
+  let db: { ok: boolean; error?: string } = { ok: false, error: "not_configured" };
+  if (sbReady()) {
+    try {
+      const r = (await select("cc_links", "select=id&limit=1")) as { ok: boolean; status: number; error: string | null };
+      db = r.ok ? { ok: true } : { ok: false, error: `http_${r.status} ${r.error ?? ""}`.trim() };
+    } catch (e) {
+      db = { ok: false, error: e instanceof Error ? e.message : "unexpected" };
+    }
+  }
+  return { ok: envOk && db.ok, missing, db };
 }
 
 async function checkActiveCampaign() {

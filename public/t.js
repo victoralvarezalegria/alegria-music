@@ -84,8 +84,6 @@
       /* tl=<slug> is appended by /go/<slug>, so the session can be tied to the
          tracking link that sent it. */
       tl: q('tl'),
-      /* tl is the tracking link slug appended by /go/<slug>. */
-      tl: q('tl'),
       screen: (s.width || 0) + 'x' + (s.height || 0),
       viewport: (d.clientWidth || 0) + 'x' + (d.clientHeight || 0),
       tz: (function () { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ''; } })(),

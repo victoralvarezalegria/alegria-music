@@ -18,8 +18,21 @@
 // carries no cookie of ours. Body vid is the fallback for the /booked path.
 // recordConversion is awaited after the AC legs and never changes the reply.
 
+//
+// 2026-10-23: link source. /apply also stamps utm_term=<last link>.<click id>
+// and utm_campaign=<first link>.<click id> (from the tl_/tc_ cookies /go set)
+// on the Calendly URL; Calendly returns them on invitee.tracking. Together with
+// the cookies on this same-origin request and the visitor's own sessions, that
+// is the source written to the FIRST_*/LAST_* AC fields and to
+// cc_conversions.meta.source. The visitor id also falls back to the tv cookie.
+
 import { recordConversion } from "@/lib/tracking/convert.js";
 import { isUuid } from "@/lib/tracking/identity.js";
+import { resolveSource, sourceMeta, parseLinkToken, fillUtmsFromLinks } from "@/lib/tracking/source.js";
+import { writeSourceToAc } from "@/lib/tracking/ac-source.js";
+
+type Touch = Record<string, string | undefined>;
+type Source = { vid: string | null; first: Touch | null; last: Touch | null };
 
 const AC_URL = process.env.AC_URL; // https://<account>.api-us1.com
 const AC_KEY = process.env.AC_KEY; // Settings > Developer > API Key
@@ -61,6 +74,8 @@ export async function POST(request: Request) {
   let startTime = clean(body.startTime);
   let vid = isUuid(body.vid) ? String(body.vid) : "";
   const eventId = isUuid(body.eventId) ? String(body.eventId) : null;
+  let calFirst: Touch | null = null;
+  let calLast: Touch | null = null;
 
   // Embed path: no email, only Calendly URIs. Look the invitee up.
   if (!email && inviteeUri) {
@@ -105,6 +120,11 @@ export async function POST(request: Request) {
       // The visitor id /apply planted in the Calendly link comes back here.
       const tracked = inv.tracking && inv.tracking.utm_content ? String(inv.tracking.utm_content).trim() : "";
       if (isUuid(tracked)) vid = tracked;
+      // The link tokens /apply planted (see the header comment).
+      const lastTok = parseLinkToken(inv.tracking?.utm_term ?? "");
+      const firstTok = parseLinkToken(inv.tracking?.utm_campaign ?? "");
+      if (lastTok) calLast = { ...lastTok, via: "calendly" };
+      if (firstTok) calFirst = { ...firstTok, via: "calendly" };
       if (eventUri && isCalendlyUri(eventUri)) {
         const evRes = await fetch(eventUri, {
           headers: { Authorization: `Bearer ${CALENDLY_TOKEN}` },
@@ -224,6 +244,27 @@ export async function POST(request: Request) {
     //    from the email and the slot, so the two paths firing for the same
     //    booking collapse onto one row instead of counting the call twice.
     const externalId = inviteeUri || (startTime ? "cal:" + email + "|" + startTime : null);
+
+    // Source: sessions + cookies + Referer, then the Calendly tokens fill any
+    // gap (they are what this browser's cookies said when the calendar loaded,
+    // and the only evidence on the /booked path from another device).
+    let src: Source | null = null;
+    try {
+      src = (await resolveSource({ request, vid })) as Source;
+      if (!src.last && calLast) src.last = calLast;
+      if (!src.first && (calFirst || calLast)) src.first = calFirst || calLast;
+      if (src.last && calLast && src.last.link === calLast.link && !src.last.click_id && calLast.click_id) {
+        src.last = { ...src.last, click_id: calLast.click_id };
+      }
+      await fillUtmsFromLinks([src.first, src.last]);
+      if (!vid && src.vid) vid = src.vid;
+    } catch (e) {
+      console.error("book: source failed", e instanceof Error ? e.message : e);
+    }
+    const acSourceP = writeSourceToAc({ acUrl: AC_URL, apiKey: AC_KEY, contactId, source: src })
+      .then((r: { status: string }) => r.status)
+      .catch(() => "error");
+
     let attribution = "skipped";
     try {
       const at = await recordConversion({
@@ -237,7 +278,7 @@ export async function POST(request: Request) {
         eventUuid: eventId,
         occurredAt: startTime || null,
         acContactId: String(contactId),
-        meta: { calendly_event: eventUri || null, calendly_invitee: inviteeUri || null },
+        meta: { calendly_event: eventUri || null, calendly_invitee: inviteeUri || null, source: sourceMeta(src) },
         req: request,
       });
       attribution = (at && at.status) || "skipped";
@@ -246,7 +287,8 @@ export async function POST(request: Request) {
       attribution = "error";
     }
 
-    return Response.json({ ok: true, contactId, tagged, firstName, attribution });
+    const acSource = await acSourceP;
+    return Response.json({ ok: true, contactId, tagged, firstName, attribution, acSource });
   } catch (err) {
     console.error("book: unexpected", err);
     return Response.json({ ok: false, error: "unexpected" }, { status: 500 });
