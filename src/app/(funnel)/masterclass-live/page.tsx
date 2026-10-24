@@ -118,6 +118,7 @@ h1 .h1b {
 .clock .mh { height: 8px; transform: rotate(360deg); }
 .when-zones { margin-top: 8px; font-size: 14px; color: var(--muted); }
 .when-live { margin-top: 18px; font-size: 15px; font-weight: 500; color: var(--accent); }
+.when-live b { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 4px; }
 .close-cta .when { margin-top: 40px; }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -365,7 +366,7 @@ const bodyHtml = `<header class="bar">
             <div class="when-date">Tuesday, October 27th</div>
             <div class="when-time"><span class="clock" aria-hidden="true"><i class="hh"></i><i class="mh"></i></span>7:00 PM CET (Madrid/Berlin)</div>
             <div class="when-zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
-            <p class="when-live">This is live only. Once it's gone, you won't be able to watch it.</p>
+            <p class="when-live"><b>Limited time only.</b> This class is live, and it will not be available after Tuesday, October 27th.</p>
         </div>
     </div>
     <a class="cta rise d4" href="#open-popup" data-t="open-popup">YES! Save My Free Seat Now!</a>
@@ -446,7 +447,7 @@ const bodyHtml = `<header class="bar">
             <div class="when-date">Tuesday, October 27th</div>
             <div class="when-time"><span class="clock" aria-hidden="true"><i class="hh"></i><i class="mh"></i></span>7:00 PM CET (Madrid/Berlin)</div>
             <div class="when-zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
-            <p class="when-live">Live only. Once it's gone, you won't be able to watch it.</p>
+            <p class="when-live"><b>Limited time only.</b> This class is live, and it will not be available after Tuesday, October 27th.</p>
         </div>
     </div>
 
