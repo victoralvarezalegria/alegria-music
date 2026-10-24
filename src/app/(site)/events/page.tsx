@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Play } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -144,57 +144,77 @@ interface PastMasterclass {
   type: "reel" | "p";
   id: string;
   image?: string;
+  video?: string;
 }
 
 const pastMasterclasses: PastMasterclass[] = [
-  { title: "Masterclass in Italy", type: "reel", id: "DZRgw4jCmkN", image: "/images/victor-masterclass-italy.jpg" },
+  { title: "Masterclass in Italy", type: "reel", id: "DZRgw4jCmkN", video: "/videos/masterclasses/DZRgw4jCmkN.mp4", image: "/videos/masterclasses/DZRgw4jCmkN.jpg" },
   { title: "Masterclass in Hong Kong", type: "p", id: "DY8bACLmCOo", image: "/images/victor-masterclass-hongkong.jpg" },
-  { title: "Masterclass in Medellín", type: "reel", id: "DYlV91UhXl3", image: "/images/victor-masterclass-medellin.jpg" },
-  { title: "Masterclass in Cali", type: "reel", id: "DYP_oFUCbH-", image: "/images/victor-masterclass-cali.jpg" },
-  { title: "Masterclass in Valencia", type: "reel", id: "DXokATSAiZv", image: "/images/victor-masterclass-valencia.jpg" },
-  { title: "Masterclass for Young Talents in Valencia", type: "reel", id: "DXtGlUtgqaz", image: "/images/victor-masterclass-valencia-young-talents.jpg" },
+  { title: "Masterclass in Medellín", type: "reel", id: "DYlV91UhXl3", video: "/videos/masterclasses/DYlV91UhXl3.mp4", image: "/videos/masterclasses/DYlV91UhXl3.jpg" },
+  { title: "Masterclass in Cali", type: "reel", id: "DYP_oFUCbH-", video: "/videos/masterclasses/DYP_oFUCbH-.mp4", image: "/videos/masterclasses/DYP_oFUCbH-.jpg" },
+  { title: "Masterclass in Valencia", type: "reel", id: "DXokATSAiZv", video: "/videos/masterclasses/DXokATSAiZv.mp4", image: "/videos/masterclasses/DXokATSAiZv.jpg" },
+  { title: "Masterclass for Young Talents in Valencia", type: "reel", id: "DXtGlUtgqaz", video: "/videos/masterclasses/DXtGlUtgqaz.mp4", image: "/videos/masterclasses/DXtGlUtgqaz.jpg" },
 ];
 
 function MasterclassCard({ mc }: { mc: PastMasterclass }) {
-  const [playing, setPlaying] = useState(false);
-  const embedSrc = `https://www.instagram.com/${mc.type}/${mc.id}/embed`;
+  // Video plays in-page, muted and looping, only while on screen (no Instagram frame). Tap to toggle sound.
+  const ref = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([e]) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause()),
+      { threshold: 0.4 }
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+
+  const toggleSound = () => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+    if (!v.muted) v.play().catch(() => {});
+  };
 
   return (
-    <div className="bg-card border border-border rounded-sm overflow-hidden">
+    <div className="group bg-card border border-border rounded-xl overflow-hidden">
       <div className="relative w-full overflow-hidden bg-black" style={{ aspectRatio: "9 / 16" }}>
-        {playing || !mc.image ? (
-          <iframe
-            src={embedSrc}
-            className="absolute inset-0 w-full h-full"
-            style={{ border: 0 }}
-            scrolling="no"
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            allowFullScreen
-            loading="lazy"
-            title={mc.title}
-          />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setPlaying(true)}
-            className="group absolute inset-0 w-full h-full cursor-pointer"
-            aria-label={`Play ${mc.title}`}
-          >
-            <Image
-              src={mc.image}
-              alt={mc.title}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+        {mc.video ? (
+          <>
+            <video
+              ref={ref}
+              src={mc.video}
+              poster={mc.image}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              onClick={toggleSound}
+              className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+              aria-label={mc.title}
             />
-            <div className="absolute inset-0 bg-black/25 group-hover:bg-black/40 transition-colors" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-14 h-14 rounded-full bg-primary/90 group-hover:bg-primary flex items-center justify-center transition-colors shadow-lg">
-                <Play className="w-5 h-5 text-primary-foreground ml-0.5" fill="currentColor" />
-              </div>
-            </div>
-          </button>
-        )}
+            <button
+              type="button"
+              onClick={toggleSound}
+              className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-black/55 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/75 transition-colors"
+              aria-label={muted ? "Turn sound on" : "Turn sound off"}
+            >
+              {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
+          </>
+        ) : mc.image ? (
+          <Image
+            src={mc.image}
+            alt={mc.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          />
+        ) : null}
       </div>
       <div className="p-4">
         <p
@@ -203,15 +223,6 @@ function MasterclassCard({ mc }: { mc: PastMasterclass }) {
         >
           {mc.title}
         </p>
-        <a
-          href={`https://www.instagram.com/${mc.type}/${mc.id}/`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-muted-foreground hover:text-primary transition-colors"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          View on Instagram ↗
-        </a>
       </div>
     </div>
   );
