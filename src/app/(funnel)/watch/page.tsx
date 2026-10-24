@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "The 1% Method Masterclass. Victor Alegria",
-  description: "A free on-demand masterclass for serious brass players. Unlock the high register, win auditions, end stage fright, without adding a single hour of practice. With Victor Alegria. Watch it whenever you want.",
+  description: "A free on-demand masterclass for trombone players. Come back to the trombone and play great again, whether you stopped 20, 30 or 40 years ago or you are chasing your next audition. With Victor Alegria. Watch it whenever you want.",
 };
 
 const css = `/* Victor's design system, measured from alegriamusic.net (2026-10-24):
@@ -130,6 +130,14 @@ h1 .h1b {
 .print.right { width: 230px; }
 .print.main { width: 330px; transform: rotate(-1deg); z-index: 2; }
 .print.main img { aspect-ratio: 4 / 5; object-position: 50% 20%; }
+/* second row: conductors, orchestra, soloist */
+.prints.row2 { padding-top: 34px; gap: 18px; flex-wrap: wrap; align-items: center; }
+.print.small { width: 210px; }
+.print.small img { aspect-ratio: 1 / 1; object-position: 50% 25%; }
+.print.small.wide { width: 250px; }
+.print.small.wide img { aspect-ratio: 4 / 3; object-position: 55% 50%; }
+.print.tilt-l { transform: rotate(-3deg); }
+.print.tilt-r { transform: rotate(3deg) translateY(8px); }
 
 /* === TALKING POINTS: Timo's FB funnel learn rows (animation beside each point, alternating) ===
    Animations: HyperFrames loops from output/watch-point-loops, rendered to /videos/watch. */
@@ -247,6 +255,9 @@ h1 .h1b {
     .print.side figcaption { display: none; }
     .print.left { transform: rotate(-7deg) translate(38px, -4px); }
     .print.right { transform: rotate(6deg) translate(-38px, -10px); }
+    .prints.row2 { padding: 26px 16px 0; gap: 12px; }
+    .print.small, .print.small.wide { width: calc(50% - 10px); max-width: 170px; }
+    .print.small.wide img { aspect-ratio: 1 / 1; }
     .points { padding: 64px 20px 0; }
     .learn-rows { gap: 56px; }
     .learn-row { grid-template-columns: 1fr; gap: 22px; }
@@ -280,10 +291,10 @@ const bodyHtml = `<header class="bar">
          live countdown automation never fires for them.
          Promise copied VERBATIM from slide 1 of the masterclass deck, so the ad,
          this page, and the masterclass's opening slide all make the same promise. -->
-    <div class="eyebrow rise d1">A Free Masterclass For Serious Brass Players</div>
+    <div class="eyebrow rise d1">A Free Masterclass For Trombone Players</div>
     <h1 class="rise d2">
-        Unlock the high register. Win auditions. End stage fright.
-        <span class="h1b">Without adding a single hour of practice.</span>
+        Come back to the trombone. Play great again.
+        <span class="h1b">Whether you stopped 20, 30 or 40 years ago, or you're chasing your next audition.</span>
     </h1>
     <div class="rule rise d3"></div>
     <a class="cta rise d4" href="#open-popup" data-t="open-popup">YES! Watch The Masterclass Now!</a>
@@ -313,6 +324,24 @@ const bodyHtml = `<header class="bar">
     <figure class="print side right">
         <img src="/images/guide-victor-helsinki.jpg" alt="Victor Alegria on stage at the Helsinki Philharmonic" loading="lazy">
         <figcaption>Helsinki Philharmonic</figcaption>
+    </figure>
+</div>
+<div class="prints row2">
+    <figure class="print small tilt-l">
+        <img src="/images/watch/with-dudamel.jpg" alt="Victor Alegria with conductor Gustavo Dudamel" loading="lazy">
+        <figcaption>With Gustavo Dudamel</figcaption>
+    </figure>
+    <figure class="print small tilt-r">
+        <img src="/images/watch/orchestra-section.jpg" alt="Victor Alegria playing in the orchestra's trombone section" loading="lazy">
+        <figcaption>Principal Trombone</figcaption>
+    </figure>
+    <figure class="print small tilt-l wide">
+        <img src="/images/watch/soloist.jpg" alt="Victor Alegria performing as soloist in front of the orchestra" loading="lazy">
+        <figcaption>International Soloist</figcaption>
+    </figure>
+    <figure class="print small tilt-r">
+        <img src="/images/watch/with-rattle.jpg" alt="Victor Alegria with conductor Sir Simon Rattle" loading="lazy">
+        <figcaption>With Sir Simon Rattle</figcaption>
     </figure>
 </div>
 
