@@ -149,11 +149,13 @@ interface PastMasterclass {
 
 const pastMasterclasses: PastMasterclass[] = [
   { title: "Masterclass in Italy", type: "reel", id: "DZRgw4jCmkN", video: "/videos/masterclasses/DZRgw4jCmkN.mp4", image: "/videos/masterclasses/DZRgw4jCmkN.jpg" },
-  { title: "Masterclass in Hong Kong", type: "p", id: "DY8bACLmCOo", image: "/images/victor-masterclass-hongkong.jpg" },
+  { title: "Masterclass in Hong Kong", type: "p", id: "DasC5p7Ct1q", video: "/videos/masterclasses/DasC5p7Ct1q.mp4", image: "/videos/masterclasses/DasC5p7Ct1q.jpg" },
   { title: "Masterclass in Medellín", type: "reel", id: "DYlV91UhXl3", video: "/videos/masterclasses/DYlV91UhXl3.mp4", image: "/videos/masterclasses/DYlV91UhXl3.jpg" },
   { title: "Masterclass in Cali", type: "reel", id: "DYP_oFUCbH-", video: "/videos/masterclasses/DYP_oFUCbH-.mp4", image: "/videos/masterclasses/DYP_oFUCbH-.jpg" },
   { title: "Masterclass in Valencia", type: "reel", id: "DXokATSAiZv", video: "/videos/masterclasses/DXokATSAiZv.mp4", image: "/videos/masterclasses/DXokATSAiZv.jpg" },
   { title: "Masterclass for Young Talents in Valencia", type: "reel", id: "DXtGlUtgqaz", video: "/videos/masterclasses/DXtGlUtgqaz.mp4", image: "/videos/masterclasses/DXtGlUtgqaz.jpg" },
+  { title: "Trombonanza Festival, Santa Fe, Argentina", type: "p", id: "DboXbGtik9n", video: "/videos/masterclasses/DboXbGtik9n.mp4", image: "/videos/masterclasses/DboXbGtik9n.jpg" },
+  { title: "Żywieckie Suwakowanie Festival, Poland", type: "p", id: "DbI7928RsKQ", video: "/videos/masterclasses/DbI7928RsKQ.mp4", image: "/videos/masterclasses/DbI7928RsKQ.jpg" },
 ];
 
 function MasterclassCard({ mc }: { mc: PastMasterclass }) {
@@ -212,7 +214,7 @@ function MasterclassCard({ mc }: { mc: PastMasterclass }) {
             alt={mc.title}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 25vw, 50vw"
           />
         ) : null}
       </div>
@@ -486,7 +488,7 @@ export default function EventsPage() {
               <span className="italic">{t("events.pastMasterclasses").split(" ").slice(-1)}</span>
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
               {pastMasterclasses.map((mc) => (
                 <MasterclassCard key={mc.id} mc={mc} />
               ))}
