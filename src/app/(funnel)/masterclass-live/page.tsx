@@ -76,12 +76,72 @@ h1 .h1b {
 }
 .rule { width: 48px; height: 1px; background: var(--accent); margin: 30px auto 0; }
 
-/* === WHEN (date, time, live only) === */
-.when { margin: 30px auto 0; }
-.when-date { font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1.2; color: #fff; }
-.when-time { margin-top: 6px; font-size: 17px; font-weight: 600; color: #fff; letter-spacing: 0.02em; }
-.when-zones { margin-top: 6px; font-size: 14px; color: var(--muted); }
+/* === WHEN: calendar card + date/time. Builds once when it scrolls into view
+   (.in, set by the script below); without motion or JS it shows finished. === */
+.when {
+    display: flex; align-items: center; justify-content: center; gap: 40px;
+    max-width: 760px; margin: 36px auto 0; text-align: left;
+}
+.cal {
+    position: relative; flex: 0 0 auto; width: 280px; padding: 0 18px 18px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.8), 0 0 70px -20px rgba(255,107,53,0.25);
+}
+.cal-rings { position: absolute; top: -9px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 64px; }
+.cal-rings i { width: 8px; height: 20px; border-radius: 4px; background: var(--raised); border: 1px solid var(--line); }
+.cal-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin: 0 -18px 12px; padding: 20px 20px 12px; border-bottom: 1px solid var(--line);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+}
+.cal-head span:last-child { color: var(--muted); }
+.cal-dow, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+.cal-dow span { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--muted); padding-bottom: 6px; }
+.cal-grid .d { position: relative; height: 32px; line-height: 32px; font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cal-grid .d.past { color: #5d626d; }
+.cal-grid .d.on b { position: relative; z-index: 1; font-weight: 700; color: #fff; }
+.cal-grid .d.on::before {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px;
+    border-radius: 50%; background: var(--accent);
+}
+.cal-grid .d.on svg { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; overflow: visible; }
+.cal-grid .d.on circle {
+    fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round;
+    stroke-dasharray: 120; stroke-dashoffset: 0; transform: rotate(-90deg); transform-origin: 50% 50%; opacity: 0.6;
+}
+.when-text { min-width: 0; }
+.when-date { font-family: var(--serif); font-weight: 400; font-size: 36px; line-height: 1.15; color: #fff; }
+.when-time { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 17px; font-weight: 600; color: #fff; letter-spacing: 0.02em; }
+.clock { position: relative; flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--accent); }
+.clock i { position: absolute; left: 50%; bottom: 50%; width: 1.5px; margin-left: -0.75px; background: #fff; border-radius: 1px; transform-origin: 50% 100%; }
+.clock .hh { height: 5.5px; transform: rotate(210deg); }
+.clock .mh { height: 8px; transform: rotate(360deg); }
+.when-zones { margin-top: 8px; font-size: 14px; color: var(--muted); }
 .when-live { margin-top: 18px; font-size: 15px; font-weight: 500; color: var(--accent); }
+.close-cta .when { margin-top: 40px; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .js .when:not(.in) .cal, .js .when:not(.in) .cal-grid .d,
+    .js .when:not(.in) .when-text > *, .js .when:not(.in) .cal-grid .d.on::before { opacity: 0; }
+    .js .when:not(.in) .cal-grid .d.on circle { stroke-dashoffset: 120; }
+    .when.in .cal { animation: calIn 0.7s cubic-bezier(.16,1,.3,1) both; }
+    .when.in .cal-grid .d { animation: dayIn 0.4s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(0.25s + var(--i, 0) * 18ms); }
+    .when.in .cal-grid .d.on::before { animation: dayOn 0.5s cubic-bezier(.16,1,.3,1) 1.15s both; }
+    .when.in .cal-grid .d.on circle { animation: ring 0.9s cubic-bezier(.65,0,.35,1) 1.05s both; }
+    .when.in .when-text > * { animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both; }
+    .when.in .when-text > :nth-child(1) { animation-delay: 1.35s; }
+    .when.in .when-text > :nth-child(2) { animation-delay: 1.5s; }
+    .when.in .when-text > :nth-child(3) { animation-delay: 1.62s; }
+    .when.in .when-text > :nth-child(4) { animation-delay: 1.74s; }
+    .when.in .clock .hh { animation: hourHand 1.3s cubic-bezier(.65,0,.35,1) 1.5s both; }
+    .when.in .clock .mh { animation: minHand 1.3s cubic-bezier(.65,0,.35,1) 1.5s both; }
+}
+@keyframes calIn { from { opacity: 0; transform: translateY(18px) rotate(-2deg); } to { opacity: 1; transform: none; } }
+@keyframes dayIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes dayOn { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+@keyframes ring { from { stroke-dashoffset: 120; } to { stroke-dashoffset: 0; } }
+@keyframes hourHand { from { transform: rotate(0deg); } to { transform: rotate(210deg); } }
+@keyframes minHand { from { transform: rotate(0deg); } to { transform: rotate(2520deg); } }
 
 /* === CTA (site button + waitlist glow) === */
 .cta {
@@ -242,7 +302,10 @@ h1 .h1b {
     h1 { font-size: 40px; }
     h1 .h1b { font-size: 29px; }
     .eyebrow { font-size: 11px; letter-spacing: 0.18em; }
-    .when-date { font-size: 28px; }
+    .when { flex-direction: column; gap: 26px; text-align: center; }
+    .cal { width: 264px; }
+    .when-time { justify-content: center; }
+    .when-date { font-size: 30px; }
     .when-time { font-size: 16px; }
     .when-zones { font-size: 13px; }
     .cta { font-size: 14px; padding: 19px 26px; letter-spacing: 0.1em; }
@@ -292,10 +355,18 @@ const bodyHtml = `<header class="bar">
     </h1>
     <div class="rule rise d3"></div>
     <div class="when rise d3">
-        <div class="when-date">Tuesday, October 27th</div>
-        <div class="when-time">7:00 PM CET (Madrid/Berlin)</div>
-        <div class="when-zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
-        <p class="when-live">This is live only. Once it's gone, you won't be able to watch it.</p>
+        <div class="cal" aria-hidden="true">
+            <div class="cal-rings"><i></i><i></i></div>
+            <div class="cal-head"><span>October</span><span>2026</span></div>
+            <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+            <div class="cal-grid"><span class="d e"></span><span class="d e"></span><span class="d e"></span><span class="d past" style="--i:3">1</span><span class="d past" style="--i:4">2</span><span class="d past" style="--i:5">3</span><span class="d past" style="--i:6">4</span><span class="d past" style="--i:7">5</span><span class="d past" style="--i:8">6</span><span class="d past" style="--i:9">7</span><span class="d past" style="--i:10">8</span><span class="d past" style="--i:11">9</span><span class="d past" style="--i:12">10</span><span class="d past" style="--i:13">11</span><span class="d past" style="--i:14">12</span><span class="d past" style="--i:15">13</span><span class="d past" style="--i:16">14</span><span class="d past" style="--i:17">15</span><span class="d past" style="--i:18">16</span><span class="d past" style="--i:19">17</span><span class="d past" style="--i:20">18</span><span class="d past" style="--i:21">19</span><span class="d past" style="--i:22">20</span><span class="d past" style="--i:23">21</span><span class="d past" style="--i:24">22</span><span class="d past" style="--i:25">23</span><span class="d past" style="--i:26">24</span><span class="d past" style="--i:27">25</span><span class="d past" style="--i:28">26</span><span class="d on" style="--i:29"><svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="19"/></svg><b>27</b></span><span class="d" style="--i:30">28</span><span class="d" style="--i:31">29</span><span class="d" style="--i:32">30</span><span class="d" style="--i:33">31</span></div>
+        </div>
+        <div class="when-text">
+            <div class="when-date">Tuesday, October 27th</div>
+            <div class="when-time"><span class="clock" aria-hidden="true"><i class="hh"></i><i class="mh"></i></span>7:00 PM CET (Madrid/Berlin)</div>
+            <div class="when-zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
+            <p class="when-live">This is live only. Once it's gone, you won't be able to watch it.</p>
+        </div>
     </div>
     <a class="cta rise d4" href="#open-popup" data-t="open-popup">YES! Save My Free Seat Now!</a>
     <div class="cta-social rise d4">
@@ -365,11 +436,19 @@ const bodyHtml = `<header class="bar">
 <section class="close-cta">
         <div class="fire">&#128293; One live session. When it's full, it's full! &#128293;</div>
         <div class="when">
+        <div class="cal" aria-hidden="true">
+            <div class="cal-rings"><i></i><i></i></div>
+            <div class="cal-head"><span>October</span><span>2026</span></div>
+            <div class="cal-dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+            <div class="cal-grid"><span class="d e"></span><span class="d e"></span><span class="d e"></span><span class="d past" style="--i:3">1</span><span class="d past" style="--i:4">2</span><span class="d past" style="--i:5">3</span><span class="d past" style="--i:6">4</span><span class="d past" style="--i:7">5</span><span class="d past" style="--i:8">6</span><span class="d past" style="--i:9">7</span><span class="d past" style="--i:10">8</span><span class="d past" style="--i:11">9</span><span class="d past" style="--i:12">10</span><span class="d past" style="--i:13">11</span><span class="d past" style="--i:14">12</span><span class="d past" style="--i:15">13</span><span class="d past" style="--i:16">14</span><span class="d past" style="--i:17">15</span><span class="d past" style="--i:18">16</span><span class="d past" style="--i:19">17</span><span class="d past" style="--i:20">18</span><span class="d past" style="--i:21">19</span><span class="d past" style="--i:22">20</span><span class="d past" style="--i:23">21</span><span class="d past" style="--i:24">22</span><span class="d past" style="--i:25">23</span><span class="d past" style="--i:26">24</span><span class="d past" style="--i:27">25</span><span class="d past" style="--i:28">26</span><span class="d on" style="--i:29"><svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="19"/></svg><b>27</b></span><span class="d" style="--i:30">28</span><span class="d" style="--i:31">29</span><span class="d" style="--i:32">30</span><span class="d" style="--i:33">31</span></div>
+        </div>
+        <div class="when-text">
             <div class="when-date">Tuesday, October 27th</div>
-            <div class="when-time">7:00 PM CET (Madrid/Berlin)</div>
+            <div class="when-time"><span class="clock" aria-hidden="true"><i class="hh"></i><i class="mh"></i></span>7:00 PM CET (Madrid/Berlin)</div>
             <div class="when-zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
             <p class="when-live">Live only. Once it's gone, you won't be able to watch it.</p>
         </div>
+    </div>
 
         <div class="ctawrap">
             <a class="cta" href="#open-popup" data-t="open-popup">YES! Save My Free Seat Now!</a>
@@ -429,6 +508,17 @@ const bodyHtml = `<header class="bar">
 </div>`;
 
 const bodyScript0 = `
+/* Calendar build: plays once per block as it scrolls into view. */
+document.documentElement.classList.add('js');
+(function () {
+    var blocks = document.querySelectorAll('.when');
+    function play(el) { el.classList.add('in'); }
+    if (!('IntersectionObserver' in window)) { blocks.forEach(play); return; }
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    blocks.forEach(function (b) { io.observe(b); });
+})();
 /* Posts to our own serverless function, which holds the ActiveCampaign key.
    The key is NEVER in this file: page source is public to every visitor. */
 var REGISTRATION_ENDPOINT = "/api/subscribe";
