@@ -289,12 +289,12 @@ const bodyHtml = `<header class="bar">
     <a class="cta rise d4" href="#open-popup" data-t="open-popup">YES! Watch The Masterclass Now!</a>
     <div class="cta-social rise d4">
         <div class="avatar-stack" aria-hidden="true">
-            <span class="av" style="background-image:url('/images/students/medellin-1.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-2.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-3.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-4.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-5.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-6.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-1.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-2.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-3.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-4.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-5.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-6.jpg')"></span>
         </div>
         <div class="stars" role="img" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
         <p class="proof-line">100+ online students worldwide</p>
@@ -358,12 +358,12 @@ const bodyHtml = `<header class="bar">
             <a class="cta" href="#open-popup" data-t="open-popup">YES! Watch The Masterclass Now!</a>
             <div class="cta-social">
                 <div class="avatar-stack" aria-hidden="true">
-                    <span class="av" style="background-image:url('/images/students/medellin-1.jpg')"></span>
-                    <span class="av" style="background-image:url('/images/students/medellin-2.jpg')"></span>
-                    <span class="av" style="background-image:url('/images/students/medellin-3.jpg')"></span>
-                    <span class="av" style="background-image:url('/images/students/medellin-4.jpg')"></span>
-                    <span class="av" style="background-image:url('/images/students/medellin-5.jpg')"></span>
-                    <span class="av" style="background-image:url('/images/students/medellin-6.jpg')"></span>
+                    <span class="av" style="background-image:url('/images/students/watch-1.jpg')"></span>
+                    <span class="av" style="background-image:url('/images/students/watch-2.jpg')"></span>
+                    <span class="av" style="background-image:url('/images/students/watch-3.jpg')"></span>
+                    <span class="av" style="background-image:url('/images/students/watch-4.jpg')"></span>
+                    <span class="av" style="background-image:url('/images/students/watch-5.jpg')"></span>
+                    <span class="av" style="background-image:url('/images/students/watch-6.jpg')"></span>
                 </div>
                 <div class="stars" role="img" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
                 <p class="proof-line">100+ online students worldwide</p>
