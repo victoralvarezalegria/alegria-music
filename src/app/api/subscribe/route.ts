@@ -1,4 +1,6 @@
-// POST /api/subscribe   { email, firstName, source? }
+// POST /api/subscribe   { email, firstName, phone, source? }
+// 2026-10-24: phone is required on both forms (Timo); it goes on the standard
+// AC phone field, same rule as /api/waitlist (7 to 20 digits, + - ( ) . space).
 // Ported from victor-site-handoff/funnel/api/subscribe.js. Same validation,
 // same status codes, same JSON shapes: the pages read `ok`, `error`, `contactId`.
 //
@@ -34,7 +36,7 @@ const AC_ONDEMAND_TAG_ID = process.env.AC_ONDEMAND_TAG_ID; // "Automated Masterc
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  let body: { email?: string; firstName?: string; source?: string; vid?: unknown; eventId?: unknown };
+  let body: { email?: string; firstName?: string; phone?: string; source?: string; vid?: unknown; eventId?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -43,6 +45,7 @@ export async function POST(request: Request) {
 
   const email = (body.email || "").trim();
   const firstName = (body.firstName || "").trim();
+  const phone = String(body.phone == null ? "" : body.phone).trim().slice(0, 40);
   const source = (body.source || "").trim().toLowerCase();
   const onDemand = source === "ondemand";
   const listId = onDemand ? AC_ONDEMAND_LIST_ID : AC_LIST_ID;
@@ -58,6 +61,12 @@ export async function POST(request: Request) {
   // nicety that anyone can bypass with a devtools fetch.
   if (!isValidEmail(email)) {
     return Response.json({ ok: false, error: "invalid_email" }, { status: 400 });
+  }
+  if (!phone) {
+    return Response.json({ ok: false, error: "missing_phone" }, { status: 400 });
+  }
+  if (!isValidPhone(phone)) {
+    return Response.json({ ok: false, error: "invalid_phone" }, { status: 400 });
   }
   if (!AC_URL || !AC_KEY || !listId) {
     // An on-demand sign-up with no AC_ONDEMAND_LIST_ID fails here on purpose:
@@ -96,7 +105,7 @@ export async function POST(request: Request) {
     const syncRes = await fetch(`${AC_URL}/api/3/contact/sync`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ contact: { email, firstName } }),
+      body: JSON.stringify({ contact: { email, firstName, phone } }),
     });
     const syncJson = await syncRes.json();
     const contactId = syncJson?.contact?.id;
@@ -160,6 +169,12 @@ export async function GET() {
     { ok: false, error: "method_not_allowed" },
     { status: 405, headers: { Allow: "POST" } },
   );
+}
+
+function isValidPhone(v: string): boolean {
+  // Digits, spaces, +, -, (, ), dot. 7 to 20 digits. International audience.
+  const digits = v.replace(/\D/g, "");
+  return /^[+\d\s().-]+$/.test(v) && digits.length >= 7 && digits.length <= 20;
 }
 
 function isValidEmail(v: string): boolean {

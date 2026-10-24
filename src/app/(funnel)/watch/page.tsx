@@ -401,6 +401,7 @@ const bodyHtml = `<header class="bar">
         <form id="regForm">
             <input type="text" name="firstname" placeholder="Your first name" required>
             <input type="email" name="email" placeholder="Your best email" required>
+            <input type="tel" name="phone" placeholder="Your phone number" autocomplete="tel" inputmode="tel" required>
             <!-- Visitor id, filled by /t.js. Hidden rather than read live at
                  submit time so the redirect never waits on /api/t/init. -->
             <input id="lf-vid" name="vid" type="hidden" value="">
@@ -439,6 +440,7 @@ form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     var email = form.email.value.trim();
     var firstName = form.firstname.value.trim();
+    var phone = form.phone.value.trim();
 
     /* Attribution. One id for this Lead, shared by the row /api/subscribe writes
        and any server-side ad event later, so the conversion is never counted
@@ -457,7 +459,7 @@ form.addEventListener('submit', function (ev) {
     fetch(REGISTRATION_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, firstName: firstName, source: REGISTRATION_SOURCE, vid: vid, eventId: eventId })
+        body: JSON.stringify({ email: email, firstName: firstName, phone: phone, source: REGISTRATION_SOURCE, vid: vid, eventId: eventId })
     })
     .then(function (r) { return r.json().catch(function () { return {}; }); })
     .then(function (data) {
@@ -470,6 +472,8 @@ form.addEventListener('submit', function (ev) {
         }
         fail(data && data.error === 'invalid_email'
             ? 'That email does not look right. Try again?'
+            : data && (data.error === 'invalid_phone' || data.error === 'missing_phone')
+            ? 'Please enter a valid phone number, with your country code.'
             : 'Something went wrong. Please try again.');
     })
     .catch(function () {

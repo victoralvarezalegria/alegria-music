@@ -36,9 +36,23 @@ body {
 }
 img { display: block; max-width: 100%; }
 
+/* === COUNTDOWN BAND (top of page, the site's orange band) === */
+.countdown { position: relative; z-index: 4; background: var(--accent); color: #fff; }
+.countdown .in {
+    max-width: 1200px; margin: 0 auto; padding: 12px 32px;
+    display: flex; align-items: center; justify-content: center; gap: 28px;
+}
+.cd-label { font-size: 13px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
+.cd-units { display: flex; align-items: flex-start; gap: 6px; }
+.cd-unit { min-width: 52px; text-align: center; }
+.cd-unit b { display: block; font-family: var(--serif); font-weight: 600; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.cd-unit span { display: block; margin-top: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.8); }
+.cd-colon { font-family: var(--serif); font-size: 30px; line-height: 1; opacity: 0.6; }
+.countdown.done .cd-units { display: none; }
+
 /* === HEADER (the site's wordmark, no nav: this is a funnel page) === */
 .bar {
-    position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+    position: absolute; top: var(--cd-h, 70px); left: 0; right: 0; z-index: 3;
     display: flex; align-items: center; gap: 12px;
     max-width: 1200px; margin: 0 auto; padding: 22px 32px;
 }
@@ -66,6 +80,9 @@ img { display: block; max-width: 100%; }
     color: var(--accent); font-weight: 500; font-size: 12px; letter-spacing: 0.22em;
     text-transform: uppercase; margin-bottom: 26px;
 }
+.eyebrow.big { margin-bottom: 28px; }
+.eyebrow.big strong { display: block; font-size: 20px; font-weight: 700; letter-spacing: 0.24em; color: var(--accent); }
+.eyebrow.big span { display: block; margin-top: 8px; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; color: var(--ink); }
 h1 {
     font-family: var(--serif); font-weight: 300; font-size: 64px; line-height: 1.06;
     letter-spacing: -0.01em; color: #fff; max-width: 980px; margin: 0 auto; text-wrap: balance;
@@ -299,6 +316,13 @@ h1 .h1b {
 /* === MOBILE === */
 @media (max-width: 860px) {
     .bar { padding: 18px 20px; }
+    .countdown .in { flex-direction: column; gap: 8px; padding: 12px 16px 14px; }
+    .cd-label { font-size: 11px; }
+    .cd-unit { min-width: 44px; }
+    .cd-unit b { font-size: 28px; }
+    .cd-colon { font-size: 24px; }
+    .eyebrow.big strong { font-size: 16px; letter-spacing: 0.2em; }
+    .eyebrow.big span { font-size: 11px; }
     .hero { padding: 104px 20px 48px; }
     h1 { font-size: 40px; }
     h1 .h1b { font-size: 29px; }
@@ -340,7 +364,19 @@ h1 .h1b {
     .print.right { width: 96px; }
 }`;
 
-const bodyHtml = `<header class="bar">
+const bodyHtml = `<div class="countdown" id="countdown" role="timer" aria-live="off">
+    <div class="in">
+        <div class="cd-label" id="cdLabel">Free live masterclass starts in</div>
+        <div class="cd-units">
+            <div class="cd-unit"><b id="cdD">--</b><span>Days</span></div><div class="cd-colon">:</div>
+            <div class="cd-unit"><b id="cdH">--</b><span>Hours</span></div><div class="cd-colon">:</div>
+            <div class="cd-unit"><b id="cdM">--</b><span>Min</span></div><div class="cd-colon">:</div>
+            <div class="cd-unit"><b id="cdS">--</b><span>Sec</span></div>
+        </div>
+    </div>
+</div>
+
+<header class="bar">
     <img src="/waitlist/assets/logo-alegria-white-59.47b95d50.webp" srcset="/waitlist/assets/logo-alegria-white-59.47b95d50.webp 1x, /waitlist/assets/logo-alegria-white-118.2fd43538.webp 2x" width="59" height="60" alt="Alegría">
     <span>Víctor Álvarez Alegría</span>
 </header>
@@ -349,7 +385,7 @@ const bodyHtml = `<header class="bar">
     <div class="hero-bg" aria-hidden="true"></div>
     <!-- Promise copied VERBATIM from slide 1 of the masterclass deck, so the ad,
          this page, and the webinar's opening slide all make the same promise. -->
-    <div class="eyebrow rise d1">A Free Live Masterclass For Serious Brass Players</div>
+    <div class="eyebrow big rise d1"><strong>Free Live Masterclass</strong><span>For serious brass players</span></div>
     <h1 class="rise d2">
         Unlock the high register. Win auditions. End stage fright.
         <span class="h1b">Without adding a single hour of practice.</span>
@@ -498,6 +534,7 @@ const bodyHtml = `<header class="bar">
         <form id="regForm">
             <input type="text" name="firstname" placeholder="Your first name" required>
             <input type="email" name="email" placeholder="Your best email" required>
+            <input type="tel" name="phone" placeholder="Your phone number" autocomplete="tel" inputmode="tel" required>
             <!-- Visitor id, filled by /t.js. Hidden rather than read live at
                  submit time so the redirect never waits on /api/t/init. -->
             <input id="lf-vid" name="vid" type="hidden" value="">
@@ -509,6 +546,30 @@ const bodyHtml = `<header class="bar">
 </div>`;
 
 const bodyScript0 = `
+/* Countdown to the live class: Tuesday 27 October 2026, 7:00pm CET = 18:00 UTC.
+   Keep in sync with /registered and src/lib/masterclass-config.ts. */
+(function () {
+    var START = Date.UTC(2026, 9, 27, 18, 0, 0), END = Date.UTC(2026, 9, 27, 19, 30, 0);
+    var band = document.getElementById('countdown');
+    var label = document.getElementById('cdLabel');
+    var el = { d: document.getElementById('cdD'), h: document.getElementById('cdH'), m: document.getElementById('cdM'), s: document.getElementById('cdS') };
+    var bar = document.querySelector('.bar');
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function fit() { if (bar) bar.style.top = band.offsetHeight + 'px'; }
+    function tick() {
+        var now = Date.now();
+        if (now >= END) { band.classList.add('done'); label.textContent = 'This live masterclass has ended'; fit(); return; }
+        if (now >= START) { band.classList.add('done'); label.textContent = 'We are live right now'; fit(); setTimeout(tick, 30000); return; }
+        var t = Math.floor((START - now) / 1000);
+        el.d.textContent = pad(Math.floor(t / 86400));
+        el.h.textContent = pad(Math.floor(t % 86400 / 3600));
+        el.m.textContent = pad(Math.floor(t % 3600 / 60));
+        el.s.textContent = pad(t % 60);
+        setTimeout(tick, 1000 - (now % 1000));
+    }
+    tick(); fit();
+    window.addEventListener('resize', fit);
+})();
 /* Calendar build: plays once per block as it scrolls into view. */
 document.documentElement.classList.add('js');
 (function () {
@@ -543,6 +604,7 @@ form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     var email = form.email.value.trim();
     var firstName = form.firstname.value.trim();
+    var phone = form.phone.value.trim();
 
     /* Attribution. One id for this Lead, shared by the row /api/subscribe writes
        and any server-side ad event later, so the conversion is never counted
@@ -561,7 +623,7 @@ form.addEventListener('submit', function (ev) {
     fetch(REGISTRATION_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, firstName: firstName, vid: vid, eventId: eventId })
+        body: JSON.stringify({ email: email, firstName: firstName, phone: phone, vid: vid, eventId: eventId })
     })
     .then(function (r) { return r.json().catch(function () { return {}; }); })
     .then(function (data) {
@@ -574,6 +636,8 @@ form.addEventListener('submit', function (ev) {
         }
         fail(data && data.error === 'invalid_email'
             ? 'That email does not look right. Try again?'
+            : data && (data.error === 'invalid_phone' || data.error === 'missing_phone')
+            ? 'Please enter a valid phone number, with your country code.'
             : 'Something went wrong saving your seat. Please try again.');
     })
     .catch(function () {
