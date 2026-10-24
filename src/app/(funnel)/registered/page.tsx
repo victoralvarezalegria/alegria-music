@@ -39,12 +39,14 @@ body {
 }
 
 /* ===== THE DATE =====
-   PLACEHOLDER. To set the real date, change these four places together:
+   To change the date, change these places together:
      1. .reg-date text below
      2. the two .reg-time spans
      3. the Google Calendar link's \`dates=\` param (UTC, YYYYMMDDTHHMMSSZ)
      4. assets/masterclass.ics (DTSTART / DTEND, also UTC)
-   Currently: Thursday 17 September 2026, 7:00pm EDT = 23:00 UTC. */
+     5. the Zoom link (.join below, the Google link and the .ics)
+   Currently: Tuesday 27 October 2026, 7:00pm CET (Madrid/Berlin) = 18:00 UTC
+   = 6:00pm London, 2:00pm New York (EDT), 11:00am Los Angeles (PDT). */
 .reg-date {
     font-family: "Cormorant Garamond", Georgia, serif;
     font-weight: 600; font-size: 60px; line-height: 1.08; color: #fff;
@@ -56,9 +58,17 @@ body {
     color: var(--ink); margin-top: 4px;
 }
 .reg-times {
-    display: flex; align-items: center; justify-content: center;
-    gap: 14px; margin-top: 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; margin-top: 20px;
 }
+.reg-times .reg-time-sep { display: none; }
+.join {
+    display: inline-block; margin-top: 30px; padding: 16px 34px;
+    background: var(--accent); color: #fff; text-decoration: none; border-radius: 5px;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.join:hover { background: var(--accent-dark); }
+.join-url { margin-top: 10px; font-size: 13px; color: var(--muted); word-break: break-all; }
 .reg-time { font-size: 17px; font-weight: 500; color: var(--ink); letter-spacing: 0.04em; }
 .reg-time-sep {
     width: 6px; height: 6px; border-radius: 100%;
@@ -140,24 +150,27 @@ const bodyHtml = `<div class="topbar"></div>
 <main class="reg">
     <div class="reg-confirmed">You're registered</div>
 
-    <h1 class="reg-date">September 17th</h1>
-    <div class="reg-day">Thursday</div>
+    <h1 class="reg-date">October 27th</h1>
+    <div class="reg-day">Tuesday</div>
 
     <div class="reg-times">
-        <span class="reg-time">7:00pm EST</span>
+        <span class="reg-time">7:00 PM CET (Madrid/Berlin)</span>
         <span class="reg-time-sep" aria-hidden="true"></span>
-        <span class="reg-time">4:00pm PST</span>
+        <span class="reg-time">6:00 PM London</span>
+        <span class="reg-time-sep" aria-hidden="true"></span>
+        <span class="reg-time">2:00 PM New York</span>
+        <span class="reg-time-sep" aria-hidden="true"></span>
+        <span class="reg-time">11:00 AM Los Angeles</span>
     </div>
 
-    <div class="placeholder-note">
-        Placeholder date. Victor confirms the final time by email before the session.
-    </div>
+    <a class="join" href="https://us06web.zoom.us/j/88699419435" target="_blank" rel="noopener">Join on Zoom</a>
+    <div class="join-url">https://us06web.zoom.us/j/88699419435</div>
 
     <p class="reg-cal">Add it to your calendar now so it doesn't slip past you.</p>
 
     <div class="cal-row">
         <a class="cal-btn" target="_blank" rel="noopener"
-           href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=The%201%25%20Method%20Masterclass%20with%20Victor%20Alegria&amp;dates=20260917T230000Z%2F20260918T003000Z&amp;details=Unlock%20range%2C%20confidence%20and%20audition-winning%20consistency%20with%20the%201%25%20Method.%0A%0AA%20live%20masterclass%20with%20Victor%20Alegria%2C%20Principal%20Trombone%20of%20the%20Helsinki%20Philharmonic.%0A%0AThe%20join%20link%20arrives%20by%20email%20before%20the%20session.">
+           href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=The%201%25%20Method%20Masterclass%20with%20Victor%20Alegria&amp;dates=20261027T180000Z%2F20261027T193000Z&amp;details=Unlock%20range%2C%20confidence%20and%20audition-winning%20consistency%20with%20the%201%25%20Method.%0A%0AA%20live%20masterclass%20with%20Victor%20Alegria%2C%20Principal%20Trombone%20of%20the%20Helsinki%20Philharmonic.%0A%0AJoin%20on%20Zoom%3A%20https%3A%2F%2Fus06web.zoom.us%2Fj%2F88699419435&amp;location=https%3A%2F%2Fus06web.zoom.us%2Fj%2F88699419435">
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                 <rect x="3" y="4" width="18" height="17" rx="3" fill="#fff"/>
                 <rect x="3" y="4" width="18" height="4.5" rx="3" fill="#4285F4"/>

@@ -7,15 +7,15 @@ export const MASTERCLASS_IS_PLACEHOLDER = false;
 // Display strings (date, day, time) live in translations.ts under the
 // "masterclass" namespace, translated for every language the site supports.
 
-// UTC, matches public/masterclass.ics DTSTART/DTEND. Helsinki is still EEST
-// (UTC+3) in early September, so 7:00pm local is 16:00 UTC.
-export const MASTERCLASS_START_UTC = "20260907T160000Z";
-export const MASTERCLASS_END_UTC = "20260907T173000Z";
+// UTC, matches public/masterclass.ics DTSTART/DTEND. Tuesday 27 October 2026,
+// 7:00pm CET (Madrid/Berlin, winter time from 25 Oct) = 18:00 UTC.
+export const MASTERCLASS_START_UTC = "20261027T180000Z";
+export const MASTERCLASS_END_UTC = "20261027T193000Z";
 
 export const MASTERCLASS_ZOOM_URL =
-  "https://us06web.zoom.us/j/83438053066?pwd=fcYPUlPcObJwURbDLo9Ku5wCHGlSKD.1";
-export const MASTERCLASS_ZOOM_MEETING_ID = "834 3805 3066";
-export const MASTERCLASS_ZOOM_PASSCODE = "171626";
+  "https://us06web.zoom.us/j/88699419435";
+export const MASTERCLASS_ZOOM_MEETING_ID = "886 9941 9435";
+export const MASTERCLASS_ZOOM_PASSCODE = "";
 
 export const MASTERCLASS_GOOGLE_CALENDAR_URL =
   "https://calendar.google.com/calendar/render?action=TEMPLATE" +

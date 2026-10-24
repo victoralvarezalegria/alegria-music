@@ -4,17 +4,17 @@ PRODID:-//Victor Alegria Music//The 1% Method Masterclass//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:1percent-masterclass-2026-09-07@alegriamusic.net
-DTSTAMP:20260827T000000Z
-DTSTART:20260907T160000Z
-DTEND:20260907T173000Z
+UID:1percent-masterclass-2026-10-27@alegriamusic.net
+DTSTAMP:20261024T120000Z
+DTSTART:20261027T180000Z
+DTEND:20261027T193000Z
 SUMMARY:The 1% Method Masterclass with Victor Alegria
 DESCRIPTION:Unlock range\, confidence and audition-winning consistency with
   the 1% Method.\n\nA live masterclass with Victor Alegria\, Principal Trombo
  ne of the Helsinki Philharmonic.\n\nJoin on Zoom: https://us06web.zoom.us/j
- /83438053066?pwd=fcYPUlPcObJwURbDLo9Ku5wCHGlSKD.1\nMeeting ID: 834 3805 306
- 6\nPasscode: 171626
-URL:https://us06web.zoom.us/j/83438053066?pwd=fcYPUlPcObJwURbDLo9Ku5wCHGlSKD.1
+ /88699419435
+LOCATION:https://us06web.zoom.us/j/88699419435
+URL:https://us06web.zoom.us/j/88699419435
 STATUS:CONFIRMED
 BEGIN:VALARM
 TRIGGER:-PT1H

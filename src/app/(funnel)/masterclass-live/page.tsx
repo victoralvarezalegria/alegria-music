@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 // Victor's copy and the registration script from the original live page
-// (victor-site-handoff/funnel/index.html), unchanged, plus the 7pm time and "limited seats".
+// (victor-site-handoff/funnel/index.html), unchanged, plus the date, time and "limited seats".
 // Rebuilt 2026-10-24 on the /watch design system (proof stack, polaroids, animated
 // talking points, stats band).
 
@@ -174,6 +174,7 @@ h1 .h1b {
 }
 .ctawrap .cta { margin-top: 28px; }
 .nocost { font-size: 13px; color: var(--muted); margin-top: 18px; letter-spacing: 0.02em; }
+.nocost.zones { margin-top: 6px; }
 
 /* === STATS BAND (the site's orange band, same three numbers) === */
 .stats { background: var(--accent); }
@@ -289,7 +290,7 @@ const bodyHtml = `<header class="bar">
     <div class="hero-bg" aria-hidden="true"></div>
     <!-- Promise copied VERBATIM from slide 1 of the masterclass deck, so the ad,
          this page, and the webinar's opening slide all make the same promise. -->
-    <div class="live rise d1"><span class="dot" aria-hidden="true"></span>Live at 7:00pm EST<span class="sep" aria-hidden="true"></span><span class="seats">Limited seats</span></div>
+    <div class="live rise d1"><span class="dot" aria-hidden="true"></span>Tuesday, Oct 27 &middot; 7:00 PM CET<span class="sep" aria-hidden="true"></span><span class="seats">Limited seats</span></div>
     <div class="eyebrow rise d1">A Free Live Masterclass For Serious Brass Players</div>
     <h1 class="rise d2">
         Unlock the high register. Win auditions. End stage fright.
@@ -378,7 +379,8 @@ const bodyHtml = `<header class="bar">
                 <div class="stars" role="img" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
                 <p class="proof-line">100+ online students worldwide</p>
             </div>
-            <div class="nocost">100% Free. Live at 7:00pm EST. Seats are limited!</div>
+            <div class="nocost">100% Free. Tuesday, October 27th at 7:00 PM CET (Madrid/Berlin). Seats are limited!</div>
+            <div class="nocost zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
         </div>
 </section>
 
