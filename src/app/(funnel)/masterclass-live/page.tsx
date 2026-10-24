@@ -76,18 +76,12 @@ h1 .h1b {
 }
 .rule { width: 48px; height: 1px; background: var(--accent); margin: 30px auto 0; }
 
-/* === LIVE BADGE (time + limited seats) === */
-.live {
-    display: inline-flex; align-items: center; gap: 12px; margin-bottom: 26px;
-    padding: 9px 18px; border: 1px solid rgba(255,107,53,0.45); border-radius: 999px;
-    background: rgba(255,107,53,0.08);
-    font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #fff;
-}
-.live .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 rgba(255,107,53,0.6); animation: pulse 1.8s ease-out infinite; }
-.live .sep { width: 1px; height: 12px; background: rgba(255,255,255,0.3); }
-.live .seats { color: var(--accent); }
-@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,107,53,0.6); } 100% { box-shadow: 0 0 0 10px rgba(255,107,53,0); } }
-.eyebrow-live { display: block; }
+/* === WHEN (date, time, live only) === */
+.when { margin: 30px auto 0; }
+.when-date { font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1.2; color: #fff; }
+.when-time { margin-top: 6px; font-size: 17px; font-weight: 600; color: #fff; letter-spacing: 0.02em; }
+.when-zones { margin-top: 6px; font-size: 14px; color: var(--muted); }
+.when-live { margin-top: 18px; font-size: 15px; font-weight: 500; color: var(--accent); }
 
 /* === CTA (site button + waitlist glow) === */
 .cta {
@@ -174,7 +168,6 @@ h1 .h1b {
 }
 .ctawrap .cta { margin-top: 28px; }
 .nocost { font-size: 13px; color: var(--muted); margin-top: 18px; letter-spacing: 0.02em; }
-.nocost.zones { margin-top: 6px; }
 
 /* === STATS BAND (the site's orange band, same three numbers) === */
 .stats { background: var(--accent); }
@@ -239,7 +232,7 @@ h1 .h1b {
 }
 @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
-    .hero-bg, .cta, .live .dot { animation: none; }
+    .hero-bg, .cta { animation: none; }
 }
 
 /* === MOBILE === */
@@ -249,7 +242,9 @@ h1 .h1b {
     h1 { font-size: 40px; }
     h1 .h1b { font-size: 29px; }
     .eyebrow { font-size: 11px; letter-spacing: 0.18em; }
-    .live { font-size: 11px; letter-spacing: 0.14em; gap: 9px; padding: 8px 14px; }
+    .when-date { font-size: 28px; }
+    .when-time { font-size: 16px; }
+    .when-zones { font-size: 13px; }
     .cta { font-size: 14px; padding: 19px 26px; letter-spacing: 0.1em; }
     .avatar-stack .av { width: 44px; height: 44px; margin-left: -12px; }
     .prints { padding: 40px 0 0; }
@@ -290,13 +285,18 @@ const bodyHtml = `<header class="bar">
     <div class="hero-bg" aria-hidden="true"></div>
     <!-- Promise copied VERBATIM from slide 1 of the masterclass deck, so the ad,
          this page, and the webinar's opening slide all make the same promise. -->
-    <div class="live rise d1"><span class="dot" aria-hidden="true"></span>Tuesday, Oct 27 &middot; 7:00 PM CET<span class="sep" aria-hidden="true"></span><span class="seats">Limited seats</span></div>
     <div class="eyebrow rise d1">A Free Live Masterclass For Serious Brass Players</div>
     <h1 class="rise d2">
         Unlock the high register. Win auditions. End stage fright.
         <span class="h1b">Without adding a single hour of practice.</span>
     </h1>
     <div class="rule rise d3"></div>
+    <div class="when rise d3">
+        <div class="when-date">Tuesday, October 27th</div>
+        <div class="when-time">7:00 PM CET (Madrid/Berlin)</div>
+        <div class="when-zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
+        <p class="when-live">This is live only. Once it's gone, you won't be able to watch it.</p>
+    </div>
     <a class="cta rise d4" href="#open-popup" data-t="open-popup">YES! Save My Free Seat Now!</a>
     <div class="cta-social rise d4">
         <div class="avatar-stack" aria-hidden="true">
@@ -364,6 +364,12 @@ const bodyHtml = `<header class="bar">
 
 <section class="close-cta">
         <div class="fire">&#128293; One live session. When it's full, it's full! &#128293;</div>
+        <div class="when">
+            <div class="when-date">Tuesday, October 27th</div>
+            <div class="when-time">7:00 PM CET (Madrid/Berlin)</div>
+            <div class="when-zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
+            <p class="when-live">Live only. Once it's gone, you won't be able to watch it.</p>
+        </div>
 
         <div class="ctawrap">
             <a class="cta" href="#open-popup" data-t="open-popup">YES! Save My Free Seat Now!</a>
@@ -379,8 +385,7 @@ const bodyHtml = `<header class="bar">
                 <div class="stars" role="img" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
                 <p class="proof-line">100+ online students worldwide</p>
             </div>
-            <div class="nocost">100% Free. Tuesday, October 27th at 7:00 PM CET (Madrid/Berlin). Seats are limited!</div>
-            <div class="nocost zones">6:00 PM London &middot; 2:00 PM New York &middot; 11:00 AM Los Angeles</div>
+            <div class="nocost">100% Free. Seats are limited!</div>
         </div>
 </section>
 
