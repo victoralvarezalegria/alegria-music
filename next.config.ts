@@ -57,7 +57,10 @@ const nextConfig: NextConfig = {
               "base-uri 'self'",
               "form-action 'self' https://calendly.com https://*.calendly.com",
               "frame-ancestors 'self'",
-              "upgrade-insecure-requests",
+              // Production only: on the local http://localhost preview Safari (unlike
+              // Chrome) upgrades every image and video to https://localhost and they
+              // all fail with a TLS error, so the page renders without pictures.
+              ...(process.env.NODE_ENV === "production" ? ["upgrade-insecure-requests"] : []),
             ].join("; "),
           },
         ],
