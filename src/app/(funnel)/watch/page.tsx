@@ -137,6 +137,8 @@ h1 .h1b {
 .print.small.wide { width: 250px; }
 .print.small.wide img { aspect-ratio: 4 / 3; object-position: 55% 50%; }
 .print.tilt-l { transform: rotate(-3deg); }
+.print.small { padding-bottom: 26px; }
+.print.small.pos-r img { object-position: 85% 50%; }
 .print.tilt-r { transform: rotate(3deg) translateY(8px); }
 
 /* === TALKING POINTS: Timo's FB funnel learn rows (animation beside each point, alternating) ===
@@ -315,7 +317,7 @@ const bodyHtml = `<header class="bar">
 <div class="prints">
     <figure class="print side left">
         <img src="/images/students/medellin-group.jpg" alt="Victor Alegria with the trombonists of his masterclass in Medellín" loading="lazy">
-        <figcaption>Masterclass, Medellín</figcaption>
+        <figcaption>International Soloist</figcaption>
     </figure>
     <figure class="print main">
         <img src="/victor.jpg" alt="Victor Alegria, Principal Trombone of the Helsinki Philharmonic, with his trombone">
@@ -323,25 +325,30 @@ const bodyHtml = `<header class="bar">
     </figure>
     <figure class="print side right">
         <img src="/images/guide-victor-helsinki.jpg" alt="Victor Alegria on stage at the Helsinki Philharmonic" loading="lazy">
-        <figcaption>Helsinki Philharmonic</figcaption>
+        <figcaption>Principal Trombone</figcaption>
     </figure>
 </div>
 <div class="prints row2">
     <figure class="print small tilt-l">
         <img src="/images/watch/with-dudamel.jpg" alt="Victor Alegria with conductor Gustavo Dudamel" loading="lazy">
-        <figcaption>With Gustavo Dudamel</figcaption>
     </figure>
     <figure class="print small tilt-r">
         <img src="/images/watch/orchestra-section.jpg" alt="Victor Alegria playing in the orchestra's trombone section" loading="lazy">
-        <figcaption>Principal Trombone</figcaption>
     </figure>
     <figure class="print small tilt-l wide">
         <img src="/images/watch/soloist.jpg" alt="Victor Alegria performing as soloist in front of the orchestra" loading="lazy">
-        <figcaption>International Soloist</figcaption>
     </figure>
     <figure class="print small tilt-r">
         <img src="/images/watch/with-rattle.jpg" alt="Victor Alegria with conductor Sir Simon Rattle" loading="lazy">
-        <figcaption>With Sir Simon Rattle</figcaption>
+    </figure>
+    <figure class="print small tilt-l wide pos-r">
+        <img src="/images/watch/masterclass-playing.jpg" alt="Victor Alegria playing in front of the trombonists at one of his masterclasses" loading="lazy">
+    </figure>
+    <figure class="print small tilt-r wide">
+        <img src="/images/watch/stage-playing.jpg" alt="Victor Alegria playing on stage" loading="lazy">
+    </figure>
+    <figure class="print small tilt-l wide">
+        <img src="/images/watch/masterclass-group.jpg" alt="Victor Alegria with the trombonists of one of his masterclasses" loading="lazy">
     </figure>
 </div>
 
