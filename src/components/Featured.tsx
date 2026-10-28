@@ -18,7 +18,7 @@ export default function Featured() {
   const { t } = useLanguage();
 
   const stats = [
-    { value: "18+", label: t("featured.yearsExp") },
+    { value: "19+", label: t("featured.yearsExp") },
     { value: "30+", label: t("featured.countries") },
     { value: "100+", label: t("featured.students") },
   ];

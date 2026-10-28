@@ -165,7 +165,7 @@ const bodyHtml = `<header class="bar">
 
 <section class="stats" aria-label="Victor Alegria in numbers">
     <div class="in">
-        <div><b>18+</b><span>Years of experience</span></div>
+        <div><b>19+</b><span>Years of experience</span></div>
         <div><b>30+</b><span>Countries performed</span></div>
         <div><b>100+</b><span>Online students worldwide</span></div>
     </div>
