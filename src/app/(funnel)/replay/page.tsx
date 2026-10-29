@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Masterclass Replay. Victor Alegria",
-  description: "The replay of Victor Alegria's 1% Method Masterclass: 4 secrets to win auditions faster. Available for a limited time.",
+  description: "The replay of Victor Alegria's 1% Method Masterclass: the 4 secrets to unlocking your trombone playing. Available for a limited time.",
   robots: { index: false, follow: false },
 };
 
@@ -74,8 +74,26 @@ h1 .h1b {
     margin-top: 14px; color: var(--ink);
 }
 
+.sub { max-width: 700px; margin: 20px auto 0; font-size: 18px; line-height: 1.65; color: #b9bdc6; text-wrap: balance; }
+
 /* === COUNTDOWN (72 hours per visitor, see the script) === */
 .timer { max-width: 640px; margin: 34px auto 0; text-align: center; }
+/* Animated clock: second hand sweeps once a minute, minute hand once an hour,
+   the ring breathes in the accent colour. */
+.clockface { display: block; width: 56px; height: 56px; margin: 0 auto 16px; overflow: visible; }
+.clockface .ring { fill: rgba(255,107,53,0.06); stroke: var(--accent); stroke-width: 2.5; animation: breathe 2s ease-in-out infinite; transform-origin: 32px 32px; }
+.clockface .ticks line { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+.clockface .hand-m { stroke: #fff; stroke-width: 3; stroke-linecap: round; transform-origin: 32px 32px; animation: spin 3600s linear infinite; }
+.clockface .hand-s { stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; transform-origin: 32px 32px; animation: spin 60s steps(60) infinite; }
+.clockface .pin { fill: var(--accent); }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes breathe { 0%, 100% { filter: drop-shadow(0 0 0 rgba(255,107,53,0)); } 50% { filter: drop-shadow(0 0 8px rgba(255,107,53,0.7)); } }
+/* Each digit drops in when it changes (class re-added by the script). */
+.unit b.flip { animation: flip 0.45s cubic-bezier(.2,.7,.2,1); }
+@keyframes flip { from { opacity: 0.2; transform: translateY(-10px) scale(0.96); } to { opacity: 1; transform: none; } }
+.unit.sec { border-top-color: #fff; animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); } 50% { box-shadow: 0 0 22px -4px rgba(255,107,53,0.55); } }
+.timer.closed .clockface { display: none; }
 .timer-label {
     font-size: 13px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
 }
@@ -226,7 +244,7 @@ h1 .h1b {
     .d1 { animation-delay: 0.08s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.3s; } .d4 { animation-delay: 0.42s; }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .hero-bg, .cta { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hero-bg, .cta, .clockface .ring, .unit.sec, .unit b.flip { animation: none; } }
 
 /* === MOBILE === */
 @media (max-width: 960px) {
@@ -289,15 +307,23 @@ const bodyHtml = `<header class="bar">
     <div class="eyebrow rise d1">The 1% Method Masterclass Replay</div>
     <h1 class="rise d2">
         Press play to start the replay.
-        <span class="h1b">4 secrets to win auditions faster.</span>
+        <span class="h1b">The 4 secrets to unlocking your trombone playing.</span>
     </h1>
+    <p class="sub rise d2">Play in the high register with ease, play with a beautiful sound, and perform at your very best when it matters.</p>
     <div class="timer rise d3" id="timer">
+        <svg class="clockface" viewBox="0 0 64 64" aria-hidden="true">
+            <circle class="ring" cx="32" cy="32" r="29"/>
+            <g class="ticks"><line x1="32" y1="6" x2="32" y2="11"/><line x1="58" y1="32" x2="53" y2="32"/><line x1="32" y1="58" x2="32" y2="53"/><line x1="6" y1="32" x2="11" y2="32"/></g>
+            <line class="hand-m" x1="32" y1="32" x2="32" y2="15"/>
+            <line class="hand-s" x1="32" y1="36" x2="32" y2="9"/>
+            <circle class="pin" cx="32" cy="32" r="2.6"/>
+        </svg>
         <div class="timer-label" id="timerLabel">This replay will only be available for the next 72 hours</div>
         <div class="clock" role="timer" aria-live="off">
             <div class="unit"><b id="tD">03</b><span>Days</span></div>
             <div class="unit"><b id="tH">00</b><span>Hours</span></div>
             <div class="unit"><b id="tM">00</b><span>Minutes</span></div>
-            <div class="unit"><b id="tS">00</b><span>Seconds</span></div>
+            <div class="unit sec"><b id="tS">00</b><span>Seconds</span></div>
         </div>
     </div>
 </section>
@@ -314,9 +340,9 @@ const bodyHtml = `<header class="bar">
     <h2>Book your free <i>1% Method Strategy Session</i> with Victor</h2>
     <div class="rule"></div>
     <div class="full">
-        <p><b>Most likely, Victor's studio is already 95% full.</b> Act while you can.</p>
+        <p>Victor has limited availability. <b>95% of his studio is gone already.</b> Once these slots are gone, they're not coming back.</p>
         <div class="meter" aria-hidden="true"><i></i></div>
-        <div class="meter-cap">Studio 95% full</div>
+        <div class="meter-cap">95% of the studio is gone</div>
     </div>
 </section>
 
@@ -386,7 +412,7 @@ const bodyHtml = `<header class="bar">
 
 <section class="close-cta">
     <div class="ready">Are you ready to become my next biggest success story?</div>
-    <p class="cap">Most likely my studio is already 95% full. Book your call before the replay comes down.</p>
+    <p class="cap">95% of my studio is gone already. Once these slots are gone, they're not coming back.</p>
     <a class="cta" href="#book" data-t="replay-book">Book My Free Strategy Session</a>
     <div class="close-timer" id="closeTimer"></div>
     <div class="cta-social">
@@ -466,12 +492,18 @@ var tD = document.getElementById('tD'), tH = document.getElementById('tH'),
     tM = document.getElementById('tM'), tS = document.getElementById('tS'),
     closeTimer = document.getElementById('closeTimer');
 var tick;
+/* Swap a digit and replay its drop-in animation only when the value changes. */
+function set(el, v) {
+    if (el.textContent === v) return;
+    el.textContent = v;
+    el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip');
+}
 function render() {
     var left = deadline - Date.now();
     if (left <= 0) { clearInterval(tick); closeReplay(); return false; }
     var s = Math.floor(left / 1000);
     var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
-    tD.textContent = pad(d); tH.textContent = pad(h); tM.textContent = pad(m); tS.textContent = pad(sec);
+    set(tD, pad(d)); set(tH, pad(h)); set(tM, pad(m)); set(tS, pad(sec));
     closeTimer.textContent = 'Replay comes down in ' + pad(d * 24 + h) + 'h ' + pad(m) + 'm ' + pad(sec) + 's';
     return true;
 }
