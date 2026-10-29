@@ -80,7 +80,7 @@ h1 .h1b {
 .timer { max-width: 640px; margin: 34px auto 0; text-align: center; }
 /* Animated clock: second hand sweeps once a minute, minute hand once an hour,
    the ring breathes in the accent colour. */
-.clockface { display: block; width: 56px; height: 56px; margin: 0 auto 16px; overflow: visible; }
+.clockface { display: block; width: 72px; height: 72px; margin: 0 auto; overflow: visible; }
 .clockface .ring { fill: rgba(255,107,53,0.06); stroke: var(--accent); stroke-width: 2.5; animation: breathe 2s ease-in-out infinite; transform-origin: 32px 32px; }
 .clockface .ticks line { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
 .clockface .hand-m { stroke: #fff; stroke-width: 3; stroke-linecap: round; transform-origin: 32px 32px; animation: spin 3600s linear infinite; }
@@ -93,7 +93,6 @@ h1 .h1b {
 @keyframes flip { from { opacity: 0.2; transform: translateY(-10px) scale(0.96); } to { opacity: 1; transform: none; } }
 .unit.sec { border-top-color: #fff; animation: pulse 1s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0); } 50% { box-shadow: 0 0 22px -4px rgba(255,107,53,0.55); } }
-.timer.closed .clockface { display: none; }
 .timer-label {
     font-size: 13px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
 }
@@ -141,9 +140,8 @@ h1 .h1b {
 }
 .full p { font-size: 17px; line-height: 1.6; color: #fff; }
 .full p b { color: var(--accent); font-weight: 600; }
-.meter { width: 100%; max-width: 420px; height: 8px; border-radius: 99px; background: var(--raised); overflow: hidden; }
-.meter i { display: block; width: 95%; height: 100%; background: var(--accent); border-radius: 99px; }
-.meter-cap { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.box-timer { font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-variant-numeric: tabular-nums; }
+.box-timer:empty { display: none; }
 
 .calband { background: var(--bg-deep); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 56px; padding: 64px 24px 64px; }
 .calcard {
@@ -311,13 +309,6 @@ const bodyHtml = `<header class="bar">
     </h1>
     <p class="sub rise d2">Play in the high register with ease, play with a beautiful sound, and perform at your very best when it matters.</p>
     <div class="timer rise d3" id="timer">
-        <svg class="clockface" viewBox="0 0 64 64" aria-hidden="true">
-            <circle class="ring" cx="32" cy="32" r="29"/>
-            <g class="ticks"><line x1="32" y1="6" x2="32" y2="11"/><line x1="58" y1="32" x2="53" y2="32"/><line x1="32" y1="58" x2="32" y2="53"/><line x1="6" y1="32" x2="11" y2="32"/></g>
-            <line class="hand-m" x1="32" y1="32" x2="32" y2="15"/>
-            <line class="hand-s" x1="32" y1="36" x2="32" y2="9"/>
-            <circle class="pin" cx="32" cy="32" r="2.6"/>
-        </svg>
         <div class="timer-label" id="timerLabel">This replay will only be available for the next 72 hours</div>
         <div class="clock" role="timer" aria-live="off">
             <div class="unit"><b id="tD">03</b><span>Days</span></div>
@@ -340,9 +331,15 @@ const bodyHtml = `<header class="bar">
     <h2>Book your free <i>1% Method Strategy Session</i> with Victor</h2>
     <div class="rule"></div>
     <div class="full">
+        <svg class="clockface" viewBox="0 0 64 64" aria-hidden="true">
+            <circle class="ring" cx="32" cy="32" r="29"/>
+            <g class="ticks"><line x1="32" y1="6" x2="32" y2="11"/><line x1="58" y1="32" x2="53" y2="32"/><line x1="32" y1="58" x2="32" y2="53"/><line x1="6" y1="32" x2="11" y2="32"/></g>
+            <line class="hand-m" x1="32" y1="32" x2="32" y2="15"/>
+            <line class="hand-s" x1="32" y1="36" x2="32" y2="9"/>
+            <circle class="pin" cx="32" cy="32" r="2.6"/>
+        </svg>
         <p>Victor has limited availability. <b>95% of his studio is gone already.</b> Once these slots are gone, they're not coming back.</p>
-        <div class="meter" aria-hidden="true"><i></i></div>
-        <div class="meter-cap">95% of the studio is gone</div>
+        <div class="box-timer" id="boxTimer"></div>
     </div>
 </section>
 
@@ -485,12 +482,13 @@ function closeReplay() {
     document.getElementById('timer').classList.add('closed');
     document.getElementById('timerLabel').textContent = 'This replay is no longer available';
     document.getElementById('closeTimer').textContent = '';
+    document.getElementById('boxTimer').textContent = '';
 }
 
 function pad(n) { return (n < 10 ? '0' : '') + n; }
 var tD = document.getElementById('tD'), tH = document.getElementById('tH'),
     tM = document.getElementById('tM'), tS = document.getElementById('tS'),
-    closeTimer = document.getElementById('closeTimer');
+    closeTimer = document.getElementById('closeTimer'), boxTimer = document.getElementById('boxTimer');
 var tick;
 /* Swap a digit and replay its drop-in animation only when the value changes. */
 function set(el, v) {
@@ -505,6 +503,7 @@ function render() {
     var d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
     set(tD, pad(d)); set(tH, pad(h)); set(tM, pad(m)); set(tS, pad(sec));
     closeTimer.textContent = 'Replay comes down in ' + pad(d * 24 + h) + 'h ' + pad(m) + 'm ' + pad(sec) + 's';
+    boxTimer.textContent = closeTimer.textContent;
     return true;
 }
 if (render()) { showVideo(); tick = setInterval(render, 1000); }
