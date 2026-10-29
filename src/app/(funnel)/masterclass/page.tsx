@@ -184,7 +184,7 @@ const bodyScript0 = `
    "https://www.youtube.com/embed/XXXXXXXXXXX?rel=0&modestbranding=1"
    or "https://player.vimeo.com/video/000000000". Empty string keeps the
    uploading placeholder (same convention as booked.html). */
-var VIDEO_EMBED = "https://www.loom.com/embed/bb11bed9669d4556bceed6e7cb2c59e0";
+var VIDEO_EMBED = "https://www.loom.com/embed/e188a3cb1e7241b192275975b62aad83?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true";
 if (VIDEO_EMBED) {
     var box = document.getElementById('videoBox');
     var f = document.createElement('iframe');
