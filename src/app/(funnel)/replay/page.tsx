@@ -287,12 +287,12 @@ h1 .h1b {
 }`;
 
 const avatars = `<div class="avatar-stack" aria-hidden="true">
-            <span class="av" style="background-image:url('/images/students/medellin-1.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-2.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-3.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-4.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-5.jpg')"></span>
-            <span class="av" style="background-image:url('/images/students/medellin-6.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-1.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-2.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-3.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-4.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-5.jpg')"></span>
+            <span class="av" style="background-image:url('/images/students/watch-6.jpg')"></span>
         </div>`;
 
 const bodyHtml = `<header class="bar">
