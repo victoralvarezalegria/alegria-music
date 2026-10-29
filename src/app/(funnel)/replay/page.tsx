@@ -449,7 +449,9 @@ var VIDEO_EMBED = "https://www.loom.com/embed/e188a3cb1e7241b192275975b62aad83?h
    ISO time, e.g. "2026-11-01T23:59:00+01:00" (Madrid). When the window ends the
    video is taken off the page; the calendar stays. */
 var WINDOW_MS = 72 * 60 * 60 * 1000;
-var FIXED_DEADLINE = "";
+/* Replay email sequence (AC, 2026-10-29): email 1 Thu 29 Oct 17:00Z, email 3 "12 hours left"
+   Sun 1 Nov 05:00Z. Replay comes down Sun 1 Nov 17:00Z = 6 PM Madrid, 12 PM New York. */
+var FIXED_DEADLINE = "2026-11-01T17:00:00Z";
 var START_KEY = "va_replay_start";
 
 function readStart() {
