@@ -122,13 +122,14 @@ export default function BookingsPage() {
         { date: "20", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Oaxaca", location: "Oaxaca · Mexico" },
         { date: "21 – 23", type: "MASTERCLASS", event: "Masterclass", location: "Puebla · Mexico" },
         { date: "24", type: "MASTERCLASS", event: "Masterclass", location: "Toluca · Mexico" },
-        { date: "27 – 30", type: "ENGAGEMENT", event: "Engagement", location: "Bangkok · Thailand" },
+        { date: "27 Nov – 4 Dec", type: "ENGAGEMENT", event: "Engagement", location: "Bangkok · Thailand" },
       ],
     },
     {
       month: "December",
       entries: [
-        { date: "1 – 31", type: "ENGAGEMENT", event: "Engagement", location: "Bangkok · Thailand" },
+        { date: "5 – 15", type: "RECORDING", event: "Recording Sessions", location: "Koh Lanta · Thailand" },
+        { date: "From 16", type: "ENGAGEMENT", event: "Engagement", location: "Dubai · UAE" },
       ],
     },
     {
