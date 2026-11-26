@@ -115,8 +115,8 @@ export default function BookingsPage() {
     {
       month: "November",
       entries: [
-        { date: "5 – 9", type: "FESTIVAL", event: "Pacific Brass Festival", location: "Mazatlán · Mexico" },
-        { date: "11", type: "MASTERCLASS", event: "Masterclass", location: "Mexico City · Mexico" },
+        { date: "5 – 9", type: "MASTERCLASS", event: "Masterclass · Pacific Brass Festival", location: "Mazatlán, Sinaloa · Mexico" },
+        { date: "11", type: "MASTERCLASS", event: "Masterclass · Conservatorio Nacional de Música", location: "Mexico City · Mexico" },
         { date: "14", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Campeche", location: "Campeche · Mexico" },
         { date: "17 – 18", type: "RECORDING", event: "Recording Sessions", location: "Cancún · Mexico" },
         { date: "20", type: "CONCERT", event: "Soloist · Orquesta Sinfónica de Oaxaca", location: "Oaxaca · Mexico" },
